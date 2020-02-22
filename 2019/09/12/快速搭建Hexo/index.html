@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="快速搭建如果你不想自己从头开始慢慢自定义主题的话，可以直接下载我的修改好的主题，然后稍微修改几个地方就好了：  根目录配置文件_config.yml和主题目录配置文件_config.yml中修改个人信息。 根目录配置文件中修改deploy一栏的repository。 根目录配置文件中修改baidu_url_submit一栏的token。 主题配置文件中修改gitalk一栏，修改方法见正文。  当然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速搭建Hexo">
+<meta property="og:url" content="http://guiu.xyz/2019/09/12/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAHexo/index.html">
+<meta property="og:site_name" content="Hcl的个人小站">
+<meta property="og:description" content="快速搭建如果你不想自己从头开始慢慢自定义主题的话，可以直接下载我的修改好的主题，然后稍微修改几个地方就好了：  根目录配置文件_config.yml和主题目录配置文件_config.yml中修改个人信息。 根目录配置文件中修改deploy一栏的repository。 根目录配置文件中修改baidu_url_submit一栏的token。 主题配置文件中修改gitalk一栏，修改方法见正文。  当然">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://godweiyang.com/2018/04/13/hexo-blog/19.jpg">
+<meta property="og:image" content="https://i.creativecommons.org/l/by/4.0/88x31.png">
+<meta property="article:published_time" content="2019-09-12T01:21:39.000Z">
+<meta property="article:modified_time" content="2019-09-12T01:21:39.000Z">
+<meta property="article:author" content="guiu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://godweiyang.com/2018/04/13/hexo-blog/19.jpg">
+
+<link rel="canonical" href="http://guiu.xyz/2019/09/12/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAHexo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>快速搭建Hexo | Hcl的个人小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hcl的个人小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right"></div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2019/09/12/%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAHexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          快速搭建Hexo
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-12 09:21:39" itemprop="dateCreated datePublished" datetime="2019-09-12T09:21:39+08:00">2019-09-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="快速搭建"><a href="#快速搭建" class="headerlink" title="快速搭建"></a>快速搭建</h1><p>如果你不想自己从头开始慢慢自定义主题的话，可以直接下载我的修改好的主题，然后稍微修改几个地方就好了：</p>
+<ul>
+<li>根目录配置文件<code>_config.yml</code>和主题目录配置文件<code>_config.yml</code>中修改个人信息。</li>
+<li>根目录配置文件中修改<code>deploy</code>一栏的<code>repository</code>。</li>
+<li>根目录配置文件中修改<code>baidu_url_submit</code>一栏的<code>token</code>。</li>
+<li>主题配置文件中修改<code>gitalk</code>一栏，修改方法见正文。</li>
+</ul>
+<p><strong>当然前提是个性化设置章节之前的环境还是需要配置好！</strong></p>
+<p>平时常用命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo g  # 生成博客网页文件</span><br><span class="line">hexo s  # 本地预览博客</span><br><span class="line">hexo d  # 上传网页文件到github</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h1 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h1><p>首先下载稳定版<a href="https://nodejs.org/dist/v9.11.1/node-v9.11.1-x64.msi" target="_blank" rel="noopener">Node.js</a>，我这里给的是64位的。</p>
+<p>安装选项全部默认，一路点击<code>Next</code>。</p>
+<p>最后安装好之后，按<code>Win+R</code>打开命令提示符，输入<code>node -v</code>和<code>npm -v</code>，如果出现版本号，那么就安装成功了。</p>
+<h1 id="添加国内镜像源"><a href="#添加国内镜像源" class="headerlink" title="添加国内镜像源"></a>添加国内镜像源</h1><p>如果没有梯子的话，可以使用阿里的国内镜像进行加速。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h1><p>在合适的地方新建一个文件夹，用来存放自己的博客文件，比如我的博客文件都存放在<code>D:\study\program\blog</code>目录下。</p>
+<p>在该目录下右键点击<code>Git Bash Here</code>，打开git的控制台窗口，以后我们所有的操作都在git控制台进行，就不要用Windows自带的控制台了。</p>
+<p>定位到该目录下，输入<code>npm i hexo-cli -g</code>安装Hexo。会有几个报错，无视它就行。</p>
+<p>安装完后输入<code>hexo -v</code>验证是否安装成功。</p>
+<p>然后就要初始化我们的网站，输入<code>hexo init</code>初始化文件夹，接着输入<code>npm install</code>安装必备的组件。</p>
+<p>这样本地的网站配置也弄好啦，输入<code>hexo g</code>生成静态网页，然后输入<code>hexo s</code>打开本地服务器，然后浏览器打开<a href="http://localhost:4000/，就可以看到我们的博客啦。" target="_blank" rel="noopener">http://localhost:4000/，就可以看到我们的博客啦。</a></p>
+<p>按<code>ctrl+c</code>关闭本地服务器。</p>
+<h1 id="写文章、发布文章"><a href="#写文章、发布文章" class="headerlink" title="写文章、发布文章"></a>写文章、发布文章</h1><p>首先在博客根目录下右键打开git bash，安装一个扩展<code>npm i hexo-deployer-git</code>。</p>
+<p>然后输入<code>hexo new post &quot;article title&quot;</code>，新建一篇文章。</p>
+<p>然后打开<code>D:\study\program\blog\source\_posts</code>的目录，可以发现下面多了一个文件夹和一个<code>.md</code>文件，一个用来存放你的图片等数据，另一个就是你的文章文件啦。</p>
+<p>编写完markdown文件后，根目录下输入<code>hexo g</code>生成静态网页，然后输入<code>hexo s</code>可以本地预览效果，最后输入<code>hexo d</code>上传到github上。这时打开你的github.io主页就能看到发布的文章啦。</p>
+<h2 id="文章头设置"><a href="#文章头设置" class="headerlink" title="文章头设置"></a>文章头设置</h2><p>首先为了新建文章方便，建议将<code>/scaffolds/post.md</code>修改为如下代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">top: false</span><br><span class="line">cover: false</span><br><span class="line">password:</span><br><span class="line">toc: true</span><br><span class="line">mathjax: true</span><br><span class="line">summary:</span><br><span class="line">tags:</span><br><span class="line">categories:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>这样新建文章后不用你自己补充了，修改信息就行。</p>
+<h2 id="添加404页面"><a href="#添加404页面" class="headerlink" title="添加404页面"></a>添加404页面</h2><p>原来的主题没有404页面，加一个也不是什么难事。首先在<code>/source/</code>目录下新建一个<code>404.md</code>，内容如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 404</span><br><span class="line">date: 2019-07-19 16:41:10</span><br><span class="line">type: "404"</span><br><span class="line">layout: "404"</span><br><span class="line">description: "你来到了没有知识的荒原 :("</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>/themes/matery/layout/</code>目录下新建一个<code>404.ejs</code>文件，内容如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/* don't remove. */</span></span></span><br><span class="line"><span class="css">    <span class="selector-class">.about-cover</span> &#123;</span></span><br><span class="line">        height: 75vh;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"bg-cover pd-header about-cover"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col s10 offset-s1 m8 offset-m2 l8 offset-l2"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"brand"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title center-align"</span>&gt;</span></span><br><span class="line">                        404</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"description center-align"</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">%=</span> <span class="attr">page.description</span> %&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 每天切换 banner 图.  Switch banner image every day.</span></span></span><br><span class="line"><span class="javascript">    $(<span class="string">'.bg-cover'</span>).css(<span class="string">'background-image'</span>, <span class="string">'url(/medias/banner/'</span> + <span class="keyword">new</span> <span class="built_in">Date</span>().getDay() + <span class="string">'.jpg)'</span>);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="“关于”页面增加简历（可选）"><a href="#“关于”页面增加简历（可选）" class="headerlink" title="“关于”页面增加简历（可选）"></a>“关于”页面增加简历（可选）</h2><p>修改<code>/themes/matery/layout/about.ejs</code>，找到<code>&lt;div class=&quot;card&quot;&gt;</code>标签，然后找到它对应的<code>&lt;/div&gt;</code>标签，接在后面新增一个card，语句如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"card"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"card-content"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"card-content article-card-content"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"title center-align"</span> <span class="attr">data-aos</span>=<span class="string">"zoom-in-up"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-address-book"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="tag">&lt;<span class="name">%-</span> <span class="attr">__</span>('<span class="attr">myCV</span>') %&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"articleContent"</span> <span class="attr">data-aos</span>=<span class="string">"fade-up"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">page.content</span> %&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就会多出一张card，然后可以在<code>/source/about/index.md</code>下面写上你的简历了，当然这里的位置随你自己设置，你也可以把简历作为第一个card。</p>
+<h2 id="解决mathjax与代码高亮的冲突"><a href="#解决mathjax与代码高亮的冲突" class="headerlink" title="解决mathjax与代码高亮的冲突"></a>解决mathjax与代码高亮的冲突</h2><p>如果你按照教程安装了代码高亮插件<code>hexo-prism-plugin</code>，单独使用是没有问题的，但如果你又使用了mathjax，并且按照网上教程，安装<code>kramed</code>插件并修改了js文件里的正则表达式（为了解决markdown和mathjax的语法冲突），好了，那你的代码就无法高亮了。解决方法很简单，别用<code>kramed</code>插件了，还用原来自带的<code>marked</code>插件，直接改它的正则表达式就行了，改法如下：</p>
+<p>打开<code>D:\study\program\blog\node_modules\marked\lib\marked.js</code><br><code>escape:</code>处替换成：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,</span><br></pre></td></tr></table></figure>
+
+<p><code>em:</code>处替换成：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span><br></pre></td></tr></table></figure>
+
+<p>这时在文章里写数学公式基本没有问题了，但是要注意：<br><strong>数学公式中如果出现了连续两个{，中间一定要加空格！</strong></p>
+<h2 id="增加建站时间"><a href="#增加建站时间" class="headerlink" title="增加建站时间"></a>增加建站时间</h2><p>修改<code>/themes/matery/layout/_partial/footer.ejs</code>文件，在最后加上</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=javascript&gt;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">siteTime</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">window</span>.setTimeout(<span class="string">"siteTime()"</span>, <span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">var</span> seconds = <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">var</span> minutes = seconds * <span class="number">60</span>;</span><br><span class="line">        <span class="keyword">var</span> hours = minutes * <span class="number">60</span>;</span><br><span class="line">        <span class="keyword">var</span> days = hours * <span class="number">24</span>;</span><br><span class="line">        <span class="keyword">var</span> years = days * <span class="number">365</span>;</span><br><span class="line">        <span class="keyword">var</span> today = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">        <span class="keyword">var</span> todayYear = today.getFullYear();</span><br><span class="line">        <span class="keyword">var</span> todayMonth = today.getMonth() + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">var</span> todayDate = today.getDate();</span><br><span class="line">        <span class="keyword">var</span> todayHour = today.getHours();</span><br><span class="line">        <span class="keyword">var</span> todayMinute = today.getMinutes();</span><br><span class="line">        <span class="keyword">var</span> todaySecond = today.getSeconds();</span><br><span class="line">        <span class="comment">/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)</span></span><br><span class="line"><span class="comment">        year - 作为date对象的年份，为4位年份值</span></span><br><span class="line"><span class="comment">        month - 0-11之间的整数，做为date对象的月份</span></span><br><span class="line"><span class="comment">        day - 1-31之间的整数，做为date对象的天数</span></span><br><span class="line"><span class="comment">        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数</span></span><br><span class="line"><span class="comment">        minutes - 0-59之间的整数，做为date对象的分钟数</span></span><br><span class="line"><span class="comment">        seconds - 0-59之间的整数，做为date对象的秒数</span></span><br><span class="line"><span class="comment">        microseconds - 0-999之间的整数，做为date对象的毫秒数 */</span></span><br><span class="line">        <span class="keyword">var</span> t1 = <span class="built_in">Date</span>.UTC(<span class="number">2017</span>, <span class="number">09</span>, <span class="number">11</span>, <span class="number">00</span>, <span class="number">00</span>, <span class="number">00</span>); <span class="comment">//北京时间2018-2-13 00:00:00</span></span><br><span class="line">        <span class="keyword">var</span> t2 = <span class="built_in">Date</span>.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);</span><br><span class="line">        <span class="keyword">var</span> diff = t2 - t1;</span><br><span class="line">        <span class="keyword">var</span> diffYears = <span class="built_in">Math</span>.floor(diff / years);</span><br><span class="line">        <span class="keyword">var</span> diffDays = <span class="built_in">Math</span>.floor((diff / days) - diffYears * <span class="number">365</span>);</span><br><span class="line">        <span class="keyword">var</span> diffHours = <span class="built_in">Math</span>.floor((diff - (diffYears * <span class="number">365</span> + diffDays) * days) / hours);</span><br><span class="line">        <span class="keyword">var</span> diffMinutes = <span class="built_in">Math</span>.floor((diff - (diffYears * <span class="number">365</span> + diffDays) * days - diffHours * hours) / minutes);</span><br><span class="line">        <span class="keyword">var</span> diffSeconds = <span class="built_in">Math</span>.floor((diff - (diffYears * <span class="number">365</span> + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);</span><br><span class="line">        <span class="built_in">document</span>.getElementById(<span class="string">"sitetime"</span>).innerHTML = <span class="string">"本站已运行 "</span> +diffYears+<span class="string">" 年 "</span>+diffDays + <span class="string">" 天 "</span> + diffHours + <span class="string">" 小时 "</span> + diffMinutes + <span class="string">" 分钟 "</span> + diffSeconds + <span class="string">" 秒"</span>;</span><br><span class="line">    &#125;<span class="comment">/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/</span></span><br><span class="line">    siteTime();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在合适的地方（比如copyright声明后面）加上下面的代码就行了：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"sitetime"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="修改不蒜子初始化计数"><a href="#修改不蒜子初始化计数" class="headerlink" title="修改不蒜子初始化计数"></a>修改不蒜子初始化计数</h2><p>因为不蒜子至今未开放注册，所以没办法在官网修改初始化，只能自己动手了。和上一条一样，在<code>/themes/matery/layout/_partial/footer.ejs</code>文件最后加上：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    $(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> int = setInterval(fixCount, <span class="number">50</span>);  <span class="comment">// 50ms周期检测函数</span></span><br><span class="line">        <span class="keyword">var</span> pvcountOffset = <span class="number">80000</span>;  <span class="comment">// 初始化首次数据</span></span><br><span class="line">        <span class="keyword">var</span> uvcountOffset = <span class="number">20000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">fixCount</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">document</span>.getElementById(<span class="string">"busuanzi_container_site_pv"</span>).style.display != <span class="string">"none"</span>) &#123;</span><br><span class="line">                $(<span class="string">"#busuanzi_value_site_pv"</span>).html(<span class="built_in">parseInt</span>($(<span class="string">"#busuanzi_value_site_pv"</span>).html()) + pvcountOffset);</span><br><span class="line">                clearInterval(int);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> ($(<span class="string">"#busuanzi_container_site_pv"</span>).css(<span class="string">"display"</span>) != <span class="string">"none"</span>) &#123;</span><br><span class="line">                $(<span class="string">"#busuanzi_value_site_uv"</span>).html(<span class="built_in">parseInt</span>($(<span class="string">"#busuanzi_value_site_uv"</span>).html()) + uvcountOffset); <span class="comment">// 加上初始数据 </span></span><br><span class="line">                clearInterval(int); <span class="comment">// 停止检测</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后把上面几行有段代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.busuanziStatistics</span> &amp;&amp; <span class="attr">theme.busuanziStatistics.totalTraffic</span>) &#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_pv"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-heart-o"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">        本站总访问量 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_pv"</span> <span class="attr">class</span>=<span class="string">"white-color"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.busuanziStatistics</span> &amp;&amp; <span class="attr">theme.busuanziStatistics.totalNumberOfvisitors</span>) &#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_uv"</span>&gt;</span></span><br><span class="line">        人次,<span class="symbol">&amp;nbsp;</span>访客数 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_uv"</span> <span class="attr">class</span>=<span class="string">"white-color"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> 人.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改为：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.busuanziStatistics</span> &amp;&amp; <span class="attr">theme.busuanziStatistics.totalTraffic</span>) &#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_pv"</span> <span class="attr">style</span>=<span class="string">'display:none'</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-heart-o"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">        本站总访问量 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_pv"</span> <span class="attr">class</span>=<span class="string">"white-color"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.busuanziStatistics</span> &amp;&amp; <span class="attr">theme.busuanziStatistics.totalNumberOfvisitors</span>) &#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_uv"</span> <span class="attr">style</span>=<span class="string">'display:none'</span>&gt;</span></span><br><span class="line">        人次,<span class="symbol">&amp;nbsp;</span>访客数 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_uv"</span> <span class="attr">class</span>=<span class="string">"white-color"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> 人.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实就是增加了两个<code>style=&#39;display:none&#39;</code>而已。</p>
+<h2 id="添加动漫人物"><a href="#添加动漫人物" class="headerlink" title="添加动漫人物"></a>添加动漫人物</h2><p>其实三步就行了，不用像网上有些教程那么复杂。</p>
+<p><strong>第一步：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-helper-live2d</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二步：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install live2d-widget-model-shizuku</span><br></pre></td></tr></table></figure>
+
+<p><strong>第三步：</strong><br>在根目录配置文件中添加如下代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">live2d:</span><br><span class="line">  enable: true</span><br><span class="line">  scriptFrom: local</span><br><span class="line">  pluginRootPath: live2dw/</span><br><span class="line">  pluginJsPath: lib/</span><br><span class="line">  pluginModelPath: assets/</span><br><span class="line">  tagMode: false</span><br><span class="line">  log: false</span><br><span class="line">  model:</span><br><span class="line">    use: live2d-widget-model-shizuku</span><br><span class="line">  display:</span><br><span class="line">    position: right</span><br><span class="line">    width: 150</span><br><span class="line">    height: 300</span><br><span class="line">  mobile:</span><br><span class="line">    show: true</span><br><span class="line">  react:</span><br><span class="line">    opacity: 0.7</span><br></pre></td></tr></table></figure>
+
+<p>然后<code>hexo g</code>再<code>hexo s</code>就能预览出效果了，但是有个注意的地方，我发现<strong>这个动漫人物最好不要和不蒜子同时使用</strong>，不然不蒜子会显示不出来。</p>
+<h2 id="图片添加水印"><a href="#图片添加水印" class="headerlink" title="图片添加水印"></a>图片添加水印</h2><p>为了防止别人抄袭你文章，可以把所有的图片都加上水印，方法很简单。</p>
+<p>首先在博客根目录下新建一个<code>watermark.py</code>，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageDraw</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageFont</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">watermark</span><span class="params">(post_name)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> post_name == <span class="string">'all'</span>:</span><br><span class="line">        post_name = <span class="string">'*'</span></span><br><span class="line">    dir_name = <span class="string">'source/_posts/'</span> + post_name + <span class="string">'/*'</span></span><br><span class="line">    <span class="keyword">for</span> files <span class="keyword">in</span> glob.glob(dir_name):</span><br><span class="line">        im = Image.open(files)</span><br><span class="line">        <span class="keyword">if</span> len(im.getbands()) &lt; <span class="number">3</span>:</span><br><span class="line">            im = im.convert(<span class="string">'RGB'</span>)</span><br><span class="line">            print(files)</span><br><span class="line">        font = ImageFont.truetype(<span class="string">'STSONG.TTF'</span>, max(<span class="number">30</span>, int(im.size[<span class="number">1</span>] / <span class="number">20</span>)))</span><br><span class="line">        draw = ImageDraw.Draw(im)</span><br><span class="line">        draw.text((im.size[<span class="number">0</span>] / <span class="number">2</span>, im.size[<span class="number">1</span>] / <span class="number">2</span>),</span><br><span class="line">                  <span class="string">u'@yourname'</span>, fill=(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>), font=font)</span><br><span class="line">        im.save(files)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">if</span> len(sys.argv) == <span class="number">2</span>:</span><br><span class="line">        watermark(sys.argv[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">'[usage] &lt;input&gt;'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>字体也放根目录下，自己找字体。然后每次写完一篇文章可以运行<code>python3 watermark.py postname</code>添加水印，如果第一次运行要给所有文章添加水印，可以运行<code>python3 watermark.py all</code>。</p>
+<h2 id="添加评论插件"><a href="#添加评论插件" class="headerlink" title="添加评论插件"></a>添加评论插件</h2><p>主题已经自带了gitalk插件了，所以你只需要去github官网配置好就行了。</p>
+<p>首先打开<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">github</a>申请一个应用，要填四个东西：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Application name &#x2F;&#x2F;应用名称，随便填</span><br><span class="line">Homepage URL &#x2F;&#x2F;填自己的博客地址</span><br><span class="line">Application description &#x2F;&#x2F;应用描述，随便填</span><br><span class="line">Authorization callback URL &#x2F;&#x2F;填自己的博客地址</span><br></pre></td></tr></table></figure>
+
+<p>然后点击注册，会出现两个字符串<code>Client ID</code>和<code>Client Secret</code>，这个要复制出来。</p>
+<p>然后去主题的配置文件<code>_config.yml</code>下修改<code>gitalk</code>那里：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gitalk:</span><br><span class="line">  enable: true</span><br><span class="line">  owner: 你的github用户名</span><br><span class="line">  repo: 你的github用户名.github.io</span><br><span class="line">  oauth:</span><br><span class="line">    clientId: 粘贴刚刚注册完显示的字符串</span><br><span class="line">    clientSecret: 粘贴刚刚注册完显示的字符串</span><br><span class="line">  admin: 你的github用户名</span><br></pre></td></tr></table></figure>
+
+<p>以后写文章的时候，只要在文章页面登陆过github，就会自动创建评论框，<strong>记得每次写完文章后打开博客文章页面一下</strong>。</p>
+<h2 id="添加百度统计和谷歌统计代码"><a href="#添加百度统计和谷歌统计代码" class="headerlink" title="添加百度统计和谷歌统计代码"></a>添加百度统计和谷歌统计代码</h2><p>首先打开<a href="https://ziyuan.baidu.com/site/index" target="_blank" rel="noopener">百度站长平台</a>，然后点击添加网站，输入网址并选择领域。</p>
+<p>接下来要验证网站所有权，有三种方式，推荐采用HTML标签验证，最简单，将代码复制出来。</p>
+<p>打开<code>themes/matery/layout/_partial/head.ejs</code>，修改下面两行：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"baidu-site-verification"</span> <span class="attr">content</span>=<span class="string">"xxx"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"google-site-verification"</span> <span class="attr">content</span>=<span class="string">"xxx"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中<code>content</code>内容改成你自己刚刚复制出来的就行了。</p>
+<h2 id="修复代码块行号不显示bug"><a href="#修复代码块行号不显示bug" class="headerlink" title="修复代码块行号不显示bug"></a>修复代码块行号不显示bug</h2><p>修改<code>themes/matery/source/css/matery.css</code>第95行左右的<code>pre</code>和<code>code</code>两段改为如下代码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">pre</span> &#123;</span><br><span class="line">    <span class="comment">/* padding: 1.5rem !important; */</span></span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">1.5rem</span> <span class="number">1.5rem</span> <span class="number">1.5rem</span> <span class="number">3.3rem</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">1rem</span> <span class="number">0</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#272822</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: auto;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">0.35rem</span>;</span><br><span class="line">    <span class="attribute">tab-size</span>: <span class="number">4</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">1px</span> <span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">font-family</span>: Inconsolata, Monaco, Consolas, <span class="string">'Courier New'</span>, Courier, monospace;</span><br><span class="line">    <span class="comment">/* font-size: 0.91rem; */</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#e96900</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#f8f8f8</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在根目录的<code>_config.yml</code>中设置<code>prism_plugin.line_number</code>为<code>true</code>。</p>
+<h2 id="优化文章url路径"><a href="#优化文章url路径" class="headerlink" title="优化文章url路径"></a>优化文章url路径</h2><p>有教程认为，将博客目录结构改为如下，就能减少层级，有利于搜索引擎的SEO。其实不然，网站内容的层级是按照从首页开始点击几次能到达你的文章来算的，所以你改不改都是两层就到达了，不在首页的也可以通过<code>index-archives-post</code>到达，跟文章url长度没有任何关系，所以如下操作作废，你想改也行，不改也行。但是建议已经建站一段时间的同学千万别改，不然会产生很多死链，并且评论issue全部会清空，很麻烦。</p>
+<p><del>seo搜索引擎优化认为，网站的最佳结构是用户从首页点击三次就可以到达任何一个页面，但是我们使用hexo编译的站点打开文章的url是：<code>sitename/year/mounth/day/title</code>四层的结构，这样的url结构很不利于seo，爬虫就会经常爬不到我们的文章，于是，我们可以将url直接改成<code>sitename/title</code>的形式，并且title最好是用英文，在根目录的<code>_config.yml</code>文件下修改permalink如下：</del></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># permalink: :year&#x2F;:month&#x2F;:day&#x2F;:title&#x2F;</span><br><span class="line">permalink: :title&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h1 id="常见问题及解答（FAQ）"><a href="#常见问题及解答（FAQ）" class="headerlink" title="常见问题及解答（FAQ）"></a>常见问题及解答（FAQ）</h1><p>这个章节主要更新许多同学在搭建博客的过程中咨询我的一些问题。</p>
+<h2 id="为什么本地生成完ssh-key之后没有-ssh文件夹？"><a href="#为什么本地生成完ssh-key之后没有-ssh文件夹？" class="headerlink" title="为什么本地生成完ssh key之后没有.ssh文件夹？"></a>为什么本地生成完ssh key之后没有.ssh文件夹？</h2><p>这是我没有想到会遇到的问题，但是很多人还是遇到了，主要问题就是在输入完<code>ssh-keygen -t rsa -C &quot;792321264@qq.com&quot;</code>之后，很多同学没有按照提示继续输入，而是就这么结束了，然后报错了也没有发现。正确做法是按照提示，一路按回车就行了。</p>
+<h2 id="为什么代码块显示有问题？"><a href="#为什么代码块显示有问题？" class="headerlink" title="为什么代码块显示有问题？"></a>为什么代码块显示有问题？</h2><p>代码要显示正确，要注意以下几个点：</p>
+<ul>
+<li><p>根目录<code>_config.yml</code>文件下的<code>highlight</code>中的<code>line_number</code>要设置为<code>false</code>，因为行号有bug，当然如果你按照上面教程修复了bug，就可以改成<code>true</code>。</p>
+</li>
+<li><p>不要按照网上教程安装<code>kramed</code>插件，已经装了的卸载掉。</p>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node_modules&#x2F;marked&#x2F;lib&#x2F;marked.js</span><br></pre></td></tr></table></figure>
+
+<p>文件中的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">escape</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em</span><br></pre></td></tr></table></figure>
+
+<p>两行（在538行左右），改成下面：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">escape: /^\\([`*\[\]()#$+\-.!_&gt;])/,</span><br><span class="line">em: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="为什么博客本地预览没问题，push到github上就显示不正常？"><a href="#为什么博客本地预览没问题，push到github上就显示不正常？" class="headerlink" title="为什么博客本地预览没问题，push到github上就显示不正常？"></a>为什么博客本地预览没问题，push到github上就显示不正常？</h2><p>这个问题可能原因有很多，我暂时列举遇到的情况：</p>
+<ul>
+<li>github博客的仓库名称一定要和你的github名字完全一样，比如你github名字叫<code>abc</code>，那么仓库名字一定要是<code>abc.github.io</code>。这是大多数人会犯的错误，会导致显示不正常。</li>
+</ul>
+<h2 id="更换主题之后，配置文件是修改根目录下的还是主题目录下的？"><a href="#更换主题之后，配置文件是修改根目录下的还是主题目录下的？" class="headerlink" title="更换主题之后，配置文件是修改根目录下的还是主题目录下的？"></a>更换主题之后，配置文件是修改根目录下的还是主题目录下的？</h2><p>这个其实都要修改，一般也不会出现重复的属性。具体使用哪个，要看主题的源代码，如果是<code>config.xxx</code>那就是用的根目录配置文件，如果是<code>theme.xxx</code>那就用的是主题目录的配置文件。</p>
+<h2 id="在哪建立github分支？"><a href="#在哪建立github分支？" class="headerlink" title="在哪建立github分支？"></a>在哪建立github分支？</h2><p>点击仓库的<code>settings-branches</code>，右边点击<code>add new branch</code>即可。</p>
+<h2 id="博客目录构成介绍"><a href="#博客目录构成介绍" class="headerlink" title="博客目录构成介绍"></a>博客目录构成介绍</h2><p>从上图可以看出，博客的目录结构如下：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">- </span>node_modules</span><br><span class="line"><span class="bullet">- </span>public</span><br><span class="line"><span class="bullet">- </span>scaffolds</span><br><span class="line"><span class="bullet">- </span>source</span><br><span class="line"><span class="bullet">    - </span>_posts</span><br><span class="line"><span class="bullet">    - </span>about</span><br><span class="line"><span class="bullet">    - </span>archive</span><br><span class="line"><span class="bullet">    - </span>img</span><br><span class="line"><span class="bullet">    - </span>tags</span><br><span class="line"><span class="bullet">- </span>themes</span><br></pre></td></tr></table></figure>
+
+<p><code>node_modules</code>是node.js各种库的目录，<code>public</code>是生成的网页文件目录，<code>scaffolds</code>里面就三个文件，存储着新文章和新页面的初始设置，<code>source</code>是我们最常用到的一个目录，里面存放着文章、各类页面、图像等文件，<code>themes</code>存放着主题文件，一般也用不到。</p>
+<p>我们平时写文章只需要关注<code>source/_posts</code>这个文件夹就行了。</p>
+<p>网站图片都保存在<code>D:\study\program\blog\source\img</code>目录下，可以修改成自己的图片。</p>
+<h2 id="修复文档分类bug"><a href="#修复文档分类bug" class="headerlink" title="修复文档分类bug"></a>修复文档分类bug</h2><p>这个主题文档分类功能有个bug，一直没有得到解决，直到最近，我才发现是源文件的单词拼错了。。。</p>
+<p>打开<code>D:\study\program\blog\scaffolds\post.md</code>，单词<code>catagories</code>改为<code>categories</code>。</p>
+<h2 id="添加图片放大功能"><a href="#添加图片放大功能" class="headerlink" title="添加图片放大功能"></a>添加图片放大功能</h2><p>首先下载<code>zooming.js</code>文件<a href="https://github.com/godweiyang/godweiyang.github.io/blob/master/js/zooming.js" target="_blank" rel="noopener">地址</a>，保存在<code>D:\study\program\blog\themes\beantech\source\js</code>目录下。</p>
+<p>打开<code>D:\study\program\blog\themes\beantech\layout\post.ejs</code>，在最下方粘贴如下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"/js/zooming.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后文章里的图片就可以单击全屏啦。</p>
+<h2 id="添加数学公式显示"><a href="#添加数学公式显示" class="headerlink" title="添加数学公式显示"></a>添加数学公式显示</h2><p>打开<code>D:\study\program\blog\themes\beantech\layout\post.ejs</code>，在最下方粘贴如下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于markdown语法与mathjax语法存在冲突，所以还需要修改源文件。</p>
+<p>打开<code>D:\study\program\blog\node_modules\marked\lib\marked.js</code><br><code>escape:</code>处替换成：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">escape: /^$[`*\[\]()#$+\-.!_&gt;])/</span><br></pre></td></tr></table></figure>
+
+<p><code>em:</code>处替换成：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span><br></pre></td></tr></table></figure>
+
+<p>这时在文章里写数学公式基本没有问题了，但是要注意：<br><strong>数学公式中如果出现了连续两个{，中间一定要加空格！</strong></p>
+<p>举个例子:<br>行内公式：y=f(x)y=f(x)<br>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$y &#x3D; f(x)$</span><br></pre></td></tr></table></figure>
+
+<p>行间公式：</p>
+<p>y=fg1(x)y=fg1(x)</p>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\\[y &#x3D; &#123;f_&#123; &#123;g_1&#125;&#125;&#125;(x)\\]</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意上面花括号之间有空格！</strong></p>
+<h2 id="添加留言板"><a href="#添加留言板" class="headerlink" title="添加留言板"></a>添加留言板</h2><p>在<code>D:\study\program\blog\themes\beantech\layout</code>中新建<code>bbs.ejs</code>，文件内容如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">layout: page</span><br><span class="line">---</span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">header</span><span class="selector-class">.intro-header</span>&#123;</span></span><br><span class="line">        background-position: right; </span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Chinese Version --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"zh post-container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%-</span> <span class="attr">page.content</span> %&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>D:\study\program\blog\source</code>中新建<code>\bbs</code>文件夹，里面在新建<code>index.md</code>文件，内容如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">layout: "bbs"</span><br><span class="line">title: "BBS"</span><br><span class="line">date: 2017-09-19 12:48:33</span><br><span class="line">description: "欢迎交换友链，一起交流学习！"</span><br><span class="line">header-img: "img/header_img/home-bg-2-dark.png"</span><br><span class="line">comments: true</span><br><span class="line">---</span><br><span class="line">此处替换为你的畅言评论代码~~~</span><br></pre></td></tr></table></figure>
+
+<h2 id="文章属性配置"><a href="#文章属性配置" class="headerlink" title="文章属性配置"></a>文章属性配置</h2><p>首先解释一下文章开头的属性配置，如下图所示：</p>
+<p><img src="https://godweiyang.com/2018/04/13/hexo-blog/19.jpg" alt="img"></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">title: 文章标题</span><br><span class="line">catalog: 是否显示段落目录</span><br><span class="line">date: 文章日期</span><br><span class="line">subtitle: 子标题</span><br><span class="line">header-img: 顶部背景图片</span><br><span class="line">top: 是否置顶</span><br><span class="line">tags: 标签</span><br><span class="line">categories: 分类</span><br></pre></td></tr></table></figure>
+
+<p>每次写文章修改每个值就行了。</p>
+<p>   转载规则</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="noopener"><img src="https://i.creativecommons.org/l/by/4.0/88x31.png" alt="img"></a></p>
+<p>《超详细Hexo+Github博客搭建小白教程》 <a href="https://godweiyang.com/2018/04/13/hexo-blog/" target="_blank" rel="noopener">韦阳 </a><a href="https://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="noopener">知识共享署名 4.0 国际许可协议 </a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/09/12/Docker%E5%85%A5%E5%9D%91%E4%B8%80%20Docker%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" rel="prev" title="Docker入坑一	Docker的安装与使用">
+      <i class="fa fa-chevron-left"></i> Docker入坑一	Docker的安装与使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/09/12/Anti_debug-writeup/" rel="next" title="Anti_debug-writeup">
+      Anti_debug-writeup <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速搭建"><span class="nav-number">1.</span> <span class="nav-text">快速搭建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Node-js"><span class="nav-number">2.</span> <span class="nav-text">安装Node.js</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加国内镜像源"><span class="nav-number">3.</span> <span class="nav-text">添加国内镜像源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Hexo"><span class="nav-number">4.</span> <span class="nav-text">安装Hexo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写文章、发布文章"><span class="nav-number">5.</span> <span class="nav-text">写文章、发布文章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章头设置"><span class="nav-number">5.1.</span> <span class="nav-text">文章头设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加404页面"><span class="nav-number">5.2.</span> <span class="nav-text">添加404页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#“关于”页面增加简历（可选）"><span class="nav-number">5.3.</span> <span class="nav-text">“关于”页面增加简历（可选）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决mathjax与代码高亮的冲突"><span class="nav-number">5.4.</span> <span class="nav-text">解决mathjax与代码高亮的冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加建站时间"><span class="nav-number">5.5.</span> <span class="nav-text">增加建站时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改不蒜子初始化计数"><span class="nav-number">5.6.</span> <span class="nav-text">修改不蒜子初始化计数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加动漫人物"><span class="nav-number">5.7.</span> <span class="nav-text">添加动漫人物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片添加水印"><span class="nav-number">5.8.</span> <span class="nav-text">图片添加水印</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加评论插件"><span class="nav-number">5.9.</span> <span class="nav-text">添加评论插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加百度统计和谷歌统计代码"><span class="nav-number">5.10.</span> <span class="nav-text">添加百度统计和谷歌统计代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修复代码块行号不显示bug"><span class="nav-number">5.11.</span> <span class="nav-text">修复代码块行号不显示bug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化文章url路径"><span class="nav-number">5.12.</span> <span class="nav-text">优化文章url路径</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见问题及解答（FAQ）"><span class="nav-number">6.</span> <span class="nav-text">常见问题及解答（FAQ）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么本地生成完ssh-key之后没有-ssh文件夹？"><span class="nav-number">6.1.</span> <span class="nav-text">为什么本地生成完ssh key之后没有.ssh文件夹？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么代码块显示有问题？"><span class="nav-number">6.2.</span> <span class="nav-text">为什么代码块显示有问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么博客本地预览没问题，push到github上就显示不正常？"><span class="nav-number">6.3.</span> <span class="nav-text">为什么博客本地预览没问题，push到github上就显示不正常？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换主题之后，配置文件是修改根目录下的还是主题目录下的？"><span class="nav-number">6.4.</span> <span class="nav-text">更换主题之后，配置文件是修改根目录下的还是主题目录下的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在哪建立github分支？"><span class="nav-number">6.5.</span> <span class="nav-text">在哪建立github分支？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#博客目录构成介绍"><span class="nav-number">6.6.</span> <span class="nav-text">博客目录构成介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修复文档分类bug"><span class="nav-number">6.7.</span> <span class="nav-text">修复文档分类bug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加图片放大功能"><span class="nav-number">6.8.</span> <span class="nav-text">添加图片放大功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加数学公式显示"><span class="nav-number">6.9.</span> <span class="nav-text">添加数学公式显示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加留言板"><span class="nav-number">6.10.</span> <span class="nav-text">添加留言板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文章属性配置"><span class="nav-number">6.11.</span> <span class="nav-text">文章属性配置</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">guiu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guiu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
