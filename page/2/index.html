@@ -141,6 +141,76 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2019/10/31/MD5%E5%8A%A0%E5%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/10/31/MD5%E5%8A%A0%E5%AF%86/" class="post-title-link" itemprop="url">MD5摘要算法笔记</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-31 11:05:13" itemprop="dateCreated datePublished" datetime="2019-10-31T11:05:13+08:00">2019-10-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="MD5摘要算法"><a href="#MD5摘要算法" class="headerlink" title="MD5摘要算法"></a>MD5摘要算法</h1><blockquote>
+<p>MD5不能称作加密算法，因为不能还原出原本的密码。</p>
+</blockquote>
+<p>MD5算法在逆向中经常遇到，所以了解其背后的原理和加密特征是有必要的，因此专门整理一下。</p>
+<p>以下以c语言的其中一种实现为例。</p>
+<hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/31/MD5%E5%8A%A0%E5%AF%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2019/10/30/apache%E4%B8%AD%E9%85%8D%E7%BD%AEphp%E5%92%8Cdjango%E5%85%B1%E5%AD%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -759,75 +829,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2019/05/09/%E7%BC%96%E8%AF%91padavan%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%A4%A9%E7%BF%BC%E9%A3%9Eyoung%E6%8B%A8%E5%8F%B7%E6%8F%92%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="guiu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hcl的个人小站">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/09/%E7%BC%96%E8%AF%91padavan%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%A4%A9%E7%BF%BC%E9%A3%9Eyoung%E6%8B%A8%E5%8F%B7%E6%8F%92%E4%BB%B6/" class="post-title-link" itemprop="url">编译padavan平台的天翼飞young3.10pppd拨号插件</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-09 09:31:51" itemprop="dateCreated datePublished" datetime="2019-05-09T09:31:51+08:00">2019-05-09</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这大概是大二的时候做的了，但是博客一直断断续续，也没有放出来，正好重新搭建了博客，就整理一下放上来吧。</p>
-<blockquote>
-<p>前言： 这是本人在无聊的时候折腾电信天翼拨号的一点心得，并附上了我的渣渣代码，有兴趣的同 学可以拿去研究一下。顺便感谢当年那位逆向天翼 mac 客户端并写出算法的牛逼学长。</p>
-</blockquote>
-<p>由于我校电信的拨号一直是天翼飞young，就是简单的加密pppoe帐号，还没有其他地方心跳包那些骚操作，所以这个方法的稳定性一直非常好。原本是用脚本算号，再用加密后的帐号密码拨号的，但是实在是麻烦，就干脆做了这个插件，路由器自动调用插件算号拨号，无缝切换美滋滋。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/05/09/%E7%BC%96%E8%AF%91padavan%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%A4%A9%E7%BF%BC%E9%A3%9Eyoung%E6%8B%A8%E5%8F%B7%E6%8F%92%E4%BB%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -898,12 +899,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>

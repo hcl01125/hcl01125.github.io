@@ -208,6 +208,73 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2020/02/21/nautilus%E8%84%9A%E6%9C%AC%E6%B7%BB%E5%8A%A0terminal%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/21/nautilus%E8%84%9A%E6%9C%AC%E6%B7%BB%E5%8A%A0terminal%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">nautilus脚本添加terminal快捷方式</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-21 19:55:25" itemprop="dateCreated datePublished" datetime="2020-02-21T19:55:25+08:00">2020-02-21</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><code>Nautilus</code> 是<code>gnome</code>桌面环境的文件管理器，但是功能还是比较有限，作为一个经常在windows下写代码的人，对windows文件管理器的快捷方式很受用。</p>
+<p>虽然nautilus也可以右键选择”在终端打开“，但是只能在窗口的空白处点击右键才有这个选项，一旦光标选中了问价或文件夹，右键菜单中就没有“在终端打开”的选项了。</p>
+<p>如果当文件太多，已经填满了窗口的情况下，根本就不可能调出这个菜单了，所以只能手动复制路径，然后在终端中<code>cd</code>过去，既影响效率又影响心情。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/21/nautilus%E8%84%9A%E6%9C%AC%E6%B7%BB%E5%8A%A0terminal%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2020/02/19/kali%E5%AE%89%E8%A3%85_Camtd_Aria2c%E5%B0%8F%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -781,76 +848,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/2019/10/31/MD5%E5%8A%A0%E5%AF%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="guiu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hcl的个人小站">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/10/31/MD5%E5%8A%A0%E5%AF%86/" class="post-title-link" itemprop="url">MD5摘要算法笔记</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-10-31 11:05:13" itemprop="dateCreated datePublished" datetime="2019-10-31T11:05:13+08:00">2019-10-31</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="MD5摘要算法"><a href="#MD5摘要算法" class="headerlink" title="MD5摘要算法"></a>MD5摘要算法</h1><blockquote>
-<p>MD5不能称作加密算法，因为不能还原出原本的密码。</p>
-</blockquote>
-<p>MD5算法在逆向中经常遇到，所以了解其背后的原理和加密特征是有必要的，因此专门整理一下。</p>
-<p>以下以c语言的其中一种实现为例。</p>
-<hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/10/31/MD5%E5%8A%A0%E5%AF%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -921,12 +918,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
