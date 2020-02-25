@@ -240,7 +240,7 @@
 <p>图床搭建好了，那么把之前存在本地的图片放上去就成了问题。一方面需要把文件传上去，另一方面还需要把原来文章中的图片引用链接改成图床的链接。我博客里文章不多，也就20多篇，但是图片可不算少，所以写了个脚本来完成这个工作。</p>
 <p><code>chevereto</code>提供了上传图片的<code>API</code>，所以首先需要去<code>chevereto</code>的后台获取你的<code>APIKEY</code>，然后才能调用接口。</p>
 <p>在<code>仪表盘</code>—&gt;<code>设置</code>—&gt;<code>API</code>菜单下就可以看到了。</p>
-<p><a href="http://sz.guiu.xyz/image/Vefa" target="_blank" rel="noopener"><img src="http://sz.guiu.xyz/images/2020/02/25/2020-02-26_01-46.png" alt="2020-02-26_01-46.png"></a></p>
+<p><img src="http://sz.guiu.xyz/images/2020/02/25/2020-02-26_01-46.png" alt="2020-02-26_01-46.png"></p>
 <p>然后就可以写代码了。</p>
 <h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>基本思路是打开本地的markdown文件，然后正则获取其中引用的本地的图片路径，并将对应的文件通过API传到图床，然后把返回的图片链接替换回去即可。流程图如下</p>
 <div id="flowchart-0" class="flow-chart"></div>
