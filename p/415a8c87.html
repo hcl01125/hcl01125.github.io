@@ -253,25 +253,31 @@
 
       
         <ol>
-<li><p>首先打开题目，发现flag乱码，用PEiD查看文件信息，发现是32位控制台程序。</p>
+<li>
+<p>首先打开题目，发现flag乱码，用PEiD查看文件信息，发现是32位控制台程序。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup12.png" alt="writeup12.PNG"></p>
 <a id="more"></a>
-
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup13.png" alt="writeup13.PNG"></p>
 </li>
-<li><p>用32位的IDA打开程序，无法直接找到main函数。通过程序可知控制台程序调用了一个窗口显示flag，窗口的名字为This is flag，所以在IDA中查找该字符串，可以找到main函数的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup14.png" alt="writeup14.PNG"></p>
+<li>
+<p>用32位的IDA打开程序，无法直接找到main函数。通过程序可知控制台程序调用了一个窗口显示flag，窗口的名字为This is flag，所以在IDA中查找该字符串，可以找到main函数的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup14.png" alt="writeup14.PNG"></p>
 </li>
-<li><p>接着用OD分析程序，通过字符串搜索找到main函数的位置，在第一个call指令下断点，然后运行程序。s</p>
+<li>
+<p>接着用OD分析程序，通过字符串搜索找到main函数的位置，在第一个call指令下断点，然后运行程序。s</p>
 </li>
-<li><p>在IDA中发现其中一个分支对字符串进行了处理。</p>
+<li>
+<p>在IDA中发现其中一个分支对字符串进行了处理。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup15.png" alt="writeup15.PNG"></p>
 </li>
-<li><p>单步跟进，使程序跳转到这个条件分支，第一条指令int3是中断指令，所以修改EIP的值跳过这个指令。</p>
+<li>
+<p>单步跟进，使程序跳转到这个条件分支，第一条指令int3是中断指令，所以修改EIP的值跳过这个指令。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup16.png" alt="writeup16.PNG"></p>
 </li>
-<li><p>然后跟进到一个函数中，在IDA中发现该函数对字符串进行了处理，初步判断这是个解码函数。</p>
+<li>
+<p>然后跟进到一个函数中，在IDA中发现该函数对字符串进行了处理，初步判断这是个解码函数。</p>
 </li>
-<li><p>函数返回后跳过exit，经过MessageBoxA函数，显示出来的就是正确的flag。</p>
+<li>
+<p>函数返回后跳过exit，经过MessageBoxA函数，显示出来的就是正确的flag。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup17.png" alt="writeup17.PNG"></p>
 </li>
 </ol>

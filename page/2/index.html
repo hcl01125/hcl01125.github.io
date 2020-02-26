@@ -233,11 +233,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="计算机操作系统"><a href="#计算机操作系统" class="headerlink" title="计算机操作系统"></a>计算机操作系统</h1><h2 id="一-操作系统引论"><a href="#一-操作系统引论" class="headerlink" title="一.操作系统引论"></a>一.操作系统引论</h2><h3 id="1-操作系统的目标和功能"><a href="#1-操作系统的目标和功能" class="headerlink" title="1.操作系统的目标和功能"></a>1.操作系统的目标和功能</h3><ul>
-<li><p>目标</p>
+          <h1>计算机操作系统</h1>
+<h2 id="一-操作系统引论"><a class="header-anchor" href="#一-操作系统引论">¶</a>一.操作系统引论</h2>
+<h3 id="1-操作系统的目标和功能"><a class="header-anchor" href="#1-操作系统的目标和功能">¶</a>1.操作系统的目标和功能</h3>
+<ul>
+<li>
+<p>目标</p>
 <ul>
 <li>方便性</li>
-<li>有效性<ul>
+<li>有效性
+<ul>
 <li>提高系统资源利用率</li>
 <li>提高系统吞吐量</li>
 </ul>
@@ -246,16 +251,18 @@
 <li>开放性</li>
 </ul>
 </li>
-<li><p>作用</p>
+<li>
+<p>作用</p>
 <ul>
-<li><p>OS作为用户与计算机硬件系统之间的接口</p>
+<li>OS作为用户与计算机硬件系统之间的接口
 <ul>
 <li>命令方式</li>
 <li>系统调用方式</li>
 <li>图标–窗口方式</li>
 </ul>
 </li>
-<li><p>OS实现了对计算机资源的抽象</p></li></ul></li></ul>
+<li>OS实现了对计算机资源的抽象</li>
+</ul></li></ul>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/p/5ade0c62.html#more" rel="contents">
@@ -329,7 +336,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="MD5摘要算法"><a href="#MD5摘要算法" class="headerlink" title="MD5摘要算法"></a>MD5摘要算法</h1><blockquote>
+          <h1>MD5摘要算法</h1>
+<blockquote>
 <p>MD5不能称作加密算法，因为不能还原出原本的密码。</p>
 </blockquote>
 <p>MD5算法在逆向中经常遇到，所以了解其背后的原理和加密特征是有必要的，因此专门整理一下。</p>
@@ -408,18 +416,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>本来跑了个django网站，后来为了方便做web题又安装了PHP study，于是原本装的apache和phpstudy内置的apache服务冲突了，导致每回都要手动重启Apache。</p>
+          <h2 id="前言："><a class="header-anchor" href="#前言：">¶</a>前言：</h2>
+<p>本来跑了个django网站，后来为了方便做web题又安装了PHP study，于是原本装的apache和phpstudy内置的apache服务冲突了，导致每回都要手动重启Apache。</p>
 <p>干脆把原来装的Apache关掉，让Django和php用不同的端口解析。</p>
-<h2 id="0x00-配置Django及其mod-wsgi"><a href="#0x00-配置Django及其mod-wsgi" class="headerlink" title="0x00 配置Django及其mod_wsgi"></a>0x00 配置Django及其mod_wsgi</h2><h3 id="安装mod-wsgi"><a href="#安装mod-wsgi" class="headerlink" title="安装mod_wsgi"></a><strong>安装mod_wsgi</strong></h3><ol>
-<li><p>注意，因为apache是32位的，所以mod_wsgi也应该选择32位的。mod_wsgi的官网在这里。</p>
+<h2 id="0x00-配置Django及其mod-wsgi"><a class="header-anchor" href="#0x00-配置Django及其mod-wsgi">¶</a>0x00 配置Django及其mod_wsgi</h2>
+<h3 id="安装mod-wsgi"><a class="header-anchor" href="#安装mod-wsgi">¶</a><strong>安装mod_wsgi</strong></h3>
+<ol>
+<li>
+<p>注意，因为apache是32位的，所以mod_wsgi也应该选择32位的。mod_wsgi的官网在这里。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;code.google.com&#x2F;p&#x2F;modwsgi&#x2F;</span><br></pre></td></tr></table></figure>
-
 <p>但是因为没有windows编译版本（自己编译几乎都是以失败告终），所幸在这里可以下载到编译版本：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;www.lfd.uci.edu&#x2F;~gohlke&#x2F;pythonlibs&#x2F;#mod_wsgi</span><br></pre></td></tr></table></figure>
-
-<p>​    这里选择</p>
+<p>​	这里选择</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mod_wsgi-4.6.5+ap24vc14-cp36-cp36m-win32.whl</span><br></pre></td></tr></table></figure>
-
 <p>将你下载的.whl 文件，放在一个目录中，我放在了 python的 \Scripts 文件夹中，然后 使用cmd cd命令到这个目录</p></li></ol>
           <!--noindex-->
             <div class="post-button">
@@ -494,7 +503,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="给萌新的逆向入门教程"><a href="#给萌新的逆向入门教程" class="headerlink" title="给萌新的逆向入门教程"></a>给萌新的逆向入门教程</h1><h2 id="0x00-事前BB"><a href="#0x00-事前BB" class="headerlink" title="0x00 事前BB"></a>0x00 事前BB</h2><p><code>pwn</code>和<code>逆向</code>可以说是CTF中比较难的方向了，<strong>但却是最不可或缺的一环</strong>。<br>说到这里就不得不说一下CTF中的鄙视链了：<br>分别是：<code>pwn-爷</code>、 <code>逆向-爹</code>、<code>web-狗</code>。</p>
+          <h1>给萌新的逆向入门教程</h1>
+<h2 id="0x00-事前BB"><a class="header-anchor" href="#0x00-事前BB">¶</a>0x00 事前BB</h2>
+<p><code>pwn</code>和<code>逆向</code>可以说是CTF中比较难的方向了，<strong>但却是最不可或缺的一环</strong>。<br>
+说到这里就不得不说一下CTF中的鄙视链了：<br>
+分别是：<code>pwn-爷</code>、 <code>逆向-爹</code>、<code>web-狗</code>。</p>
 <p>pwn和逆向有一定的共同点，但是毕竟咱也没人玩pwn啊，所以就随便写写逆向教程好了。</p>
 <p>逆向的特点比较突出，那就是<code>入门难</code>，<code>起点高</code>，<code>学习曲线陡</code>。逆向在学习的过程中成就感并没有web那么突出，总体上的感觉就是枯燥，但是如果你喜欢那种一层层抽丝剥茧之后豁然开朗的感觉，那就开搞吧。</p>
           <!--noindex-->
@@ -571,7 +584,8 @@
 
       
           <p>考研备考之余练练逆向，从ad-world进阶区刷起，每晚一道；</p>
-<h1 id="re3-re2-cpp-is-awesome"><a href="#re3-re2-cpp-is-awesome" class="headerlink" title="re3 re2-cpp-is-awesome"></a>re3 re2-cpp-is-awesome</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">main</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">char</span> **a2, <span class="keyword">char</span> **a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *v3; <span class="comment">// rbx</span></span><br><span class="line">  __int64 v4; <span class="comment">// rax</span></span><br><span class="line">  __int64 v5; <span class="comment">// rdx</span></span><br><span class="line">  __int64 v6; <span class="comment">// rax</span></span><br><span class="line">  __int64 v7; <span class="comment">// rdx</span></span><br><span class="line">  _BYTE *v8; <span class="comment">// rax</span></span><br><span class="line">  __int64 i; <span class="comment">// [rsp+10h] [rbp-60h]</span></span><br><span class="line">  <span class="keyword">char</span> v11; <span class="comment">// [rsp+20h] [rbp-50h]</span></span><br><span class="line">  <span class="keyword">char</span> v12; <span class="comment">// [rsp+4Fh] [rbp-21h]</span></span><br><span class="line">  __int64 v13; <span class="comment">// [rsp+50h] [rbp-20h]</span></span><br><span class="line">  <span class="keyword">int</span> v14; <span class="comment">// [rsp+5Ch] [rbp-14h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a1 != <span class="number">2</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v3 = *a2;</span><br><span class="line">    v4 = <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(&amp;<span class="built_in">std</span>::<span class="built_in">cout</span>, <span class="string">"Usage: "</span>, a3);</span><br><span class="line">    v6 = <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(v4, v3, v5);</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(v6, <span class="string">" flag\n"</span>, v7);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;::allocator(&amp;v12, a2, a3);</span><br><span class="line">  <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::basic_string(&amp;v11, a2[<span class="number">1</span>], &amp;v12);</span><br><span class="line">  <span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;::~allocator(&amp;v12);</span><br><span class="line">  v14 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::<span class="built_in">begin</span>(&amp;v11); ; sub_400D7A(&amp;i) )</span><br><span class="line">  &#123;</span><br><span class="line">    v13 = <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::<span class="built_in">end</span>(&amp;v11);</span><br><span class="line">    <span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> __int8)sub_400D3D(&amp;i, &amp;v13) )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    v8 = (_BYTE *)sub_400D9A(&amp;i);</span><br><span class="line">    <span class="keyword">if</span> ( *v8 != off_6020A0[dword_6020C0[v14]] ) <span class="comment">// 关键点</span></span><br><span class="line">      sub_400B56();</span><br><span class="line">    ++v14;</span><br><span class="line">  &#125;</span><br><span class="line">  sub_400B73();</span><br><span class="line">  <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::~basic_string(&amp;v11);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>re3 re2-cpp-is-awesome</h1>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">main</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">char</span> **a2, <span class="keyword">char</span> **a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *v3; <span class="comment">// rbx</span></span><br><span class="line">  __int64 v4; <span class="comment">// rax</span></span><br><span class="line">  __int64 v5; <span class="comment">// rdx</span></span><br><span class="line">  __int64 v6; <span class="comment">// rax</span></span><br><span class="line">  __int64 v7; <span class="comment">// rdx</span></span><br><span class="line">  _BYTE *v8; <span class="comment">// rax</span></span><br><span class="line">  __int64 i; <span class="comment">// [rsp+10h] [rbp-60h]</span></span><br><span class="line">  <span class="keyword">char</span> v11; <span class="comment">// [rsp+20h] [rbp-50h]</span></span><br><span class="line">  <span class="keyword">char</span> v12; <span class="comment">// [rsp+4Fh] [rbp-21h]</span></span><br><span class="line">  __int64 v13; <span class="comment">// [rsp+50h] [rbp-20h]</span></span><br><span class="line">  <span class="keyword">int</span> v14; <span class="comment">// [rsp+5Ch] [rbp-14h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a1 != <span class="number">2</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v3 = *a2;</span><br><span class="line">    v4 = <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(&amp;<span class="built_in">std</span>::<span class="built_in">cout</span>, <span class="string">"Usage: "</span>, a3);</span><br><span class="line">    v6 = <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(v4, v3, v5);</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">operator</span>&lt;&lt;&lt;<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;&gt;(v6, <span class="string">" flag\n"</span>, v7);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;::allocator(&amp;v12, a2, a3);</span><br><span class="line">  <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::basic_string(&amp;v11, a2[<span class="number">1</span>], &amp;v12);</span><br><span class="line">  <span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;::~allocator(&amp;v12);</span><br><span class="line">  v14 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::<span class="built_in">begin</span>(&amp;v11); ; sub_400D7A(&amp;i) )</span><br><span class="line">  &#123;</span><br><span class="line">    v13 = <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::<span class="built_in">end</span>(&amp;v11);</span><br><span class="line">    <span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> __int8)sub_400D3D(&amp;i, &amp;v13) )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    v8 = (_BYTE *)sub_400D9A(&amp;i);</span><br><span class="line">    <span class="keyword">if</span> ( *v8 != off_6020A0[dword_6020C0[v14]] ) <span class="comment">// 关键点</span></span><br><span class="line">      sub_400B56();</span><br><span class="line">    ++v14;</span><br><span class="line">  &#125;</span><br><span class="line">  sub_400B73();</span><br><span class="line">  <span class="built_in">std</span>::__cxx11::basic_string&lt;<span class="keyword">char</span>,<span class="built_in">std</span>::char_traits&lt;<span class="keyword">char</span>&gt;,<span class="built_in">std</span>::allocator&lt;<span class="keyword">char</span>&gt;&gt;::~basic_string(&amp;v11);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/p/9e8c7ad8.html#more" rel="contents">
@@ -645,11 +659,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="使用python3解析html网页表格"><a href="#使用python3解析html网页表格" class="headerlink" title="使用python3解析html网页表格"></a>使用python3解析html网页表格</h1><p>实习实在是太无聊了，看书是看不进去的，跟着老师对着那些宛如ZZ的上古软件点点点那更是不可能，于是想起之前找学弟PY，想解析一下课程表的页面，无果，于是就写着玩玩。虽然弄出来好像也没啥卵用……</p>
-<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用python3解析html网页，并输出成json结构树</p>
+          <h1>使用python3解析html网页表格</h1>
+<p>实习实在是太无聊了，看书是看不进去的，跟着老师对着那些宛如ZZ的上古软件点点点那更是不可能，于是想起之前找学弟PY，想解析一下课程表的页面，无果，于是就写着玩玩。虽然弄出来好像也没啥卵用……</p>
+<h2 id="需求"><a class="header-anchor" href="#需求">¶</a>需求</h2>
+<p>使用python3解析html网页，并输出成json结构树</p>
 <p>参考代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;github.com&#x2F;schmijos&#x2F;html-table-parser-python3</span><br></pre></td></tr></table></figure>
-
 <p>这里是一个外国小哥哥写的解析代码，测试了一下可以解析，但是只能解析简单表，对于复杂表格他这里没有处理。</p>
           <!--noindex-->
             <div class="post-button">
@@ -724,9 +739,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="攻防世界-web进阶-部分writeup"><a href="#攻防世界-web进阶-部分writeup" class="headerlink" title="攻防世界-web进阶-部分writeup"></a>攻防世界-web进阶-部分writeup</h1><h3 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h3><p>首先打开题目：</p>
+          <h1>攻防世界-web进阶-部分writeup</h1>
+<h3 id="Web-php-include"><a class="header-anchor" href="#Web-php-include">¶</a>Web_php_include</h3>
+<p>首先打开题目：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">echo</span> $_GET[<span class="string">'hello'</span>];</span><br><span class="line">$page=$_GET[<span class="string">'page'</span>];</span><br><span class="line"><span class="keyword">while</span> (strstr($page, <span class="string">"php://"</span>)) &#123;</span><br><span class="line">    $page=str_replace(<span class="string">"php://"</span>, <span class="string">""</span>, $page);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>($page);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>有文件包含，没拿到文件名，而且循环过滤，看起来绕过是不太容易。</p>
           <!--noindex-->
             <div class="post-button">
@@ -801,7 +817,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="【VSCode插件】xdebug开发调试PHP"><a href="#【VSCode插件】xdebug开发调试PHP" class="headerlink" title="【VSCode插件】xdebug开发调试PHP"></a>【VSCode插件】xdebug开发调试PHP</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>Xdebug 在开发过程中可以帮我们查看具体的运行和步骤，以及每行代码执行的结果，在学习和解决代码问题的时候可以提供非常大的便利。PHPStorm 也可以进行 Xdebug 调试，VScode 也可以进行配置调试，且比 PHPStorm 的配置简单很多，不用每次去创建一个 Server，再创建一个 web page 服务。相比之下，VSCode 的界面好看，且简单方便，值得学习一下。</p>
+          <h1>【VSCode插件】xdebug开发调试PHP</h1>
+<h2 id="摘要"><a class="header-anchor" href="#摘要">¶</a>摘要</h2>
+<p>Xdebug 在开发过程中可以帮我们查看具体的运行和步骤，以及每行代码执行的结果，在学习和解决代码问题的时候可以提供非常大的便利。PHPStorm 也可以进行 Xdebug 调试，VScode 也可以进行配置调试，且比 PHPStorm 的配置简单很多，不用每次去创建一个 Server，再创建一个 web page 服务。相比之下，VSCode 的界面好看，且简单方便，值得学习一下。</p>
 <p>使用了一段时间，但是偶尔还是会出现一些问题，故而进行了整理总结。</p>
           <!--noindex-->
             <div class="post-button">
@@ -877,9 +895,11 @@
 
       
           <ol>
-<li><p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://sz.guiu.xyz/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
+<li>
+<p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://sz.guiu.xyz/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
 </li>
-<li><p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p></li></ol>
+<li>
+<p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p></li></ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/p/2198b0ee.html#more" rel="contents">
@@ -953,7 +973,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="快速搭建"><a href="#快速搭建" class="headerlink" title="快速搭建"></a>快速搭建</h1><p>如果你不想自己从头开始慢慢自定义主题的话，可以直接下载我的修改好的主题，然后稍微修改几个地方就好了：</p>
+          <h1>快速搭建</h1>
+<p>如果你不想自己从头开始慢慢自定义主题的话，可以直接下载我的修改好的主题，然后稍微修改几个地方就好了：</p>
 <ul>
 <li>根目录配置文件<code>_config.yml</code>和主题目录配置文件<code>_config.yml</code>中修改个人信息。</li>
 <li>根目录配置文件中修改<code>deploy</code>一栏的<code>repository</code>。</li>

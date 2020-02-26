@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。     然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。">
+  <meta name="description" content="拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。      然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Anti_debug-writeup">
 <meta property="og:url" content="http://guiu.xyz/p/2198b0ee.html">
 <meta property="og:site_name" content="Hcl的个人小站">
-<meta property="og:description" content="拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。     然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。">
+<meta property="og:description" content="拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。      然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/writeup1.png">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/writeup2.png">
@@ -258,26 +258,35 @@
 
       
         <ol>
-<li><p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://sz.guiu.xyz/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
+<li>
+<p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://sz.guiu.xyz/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
 </li>
-<li><p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p>
+<li>
+<p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p>
 <a id="more"></a>
 </li>
-<li><p>按F8跟进程序到达第一个调用程序的位置，随便输入一串长度超过15的字符，看到程序停在了一个判断语句的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup3.png" alt="writeup3.PNG"></p>
+<li>
+<p>按F8跟进程序到达第一个调用程序的位置，随便输入一串长度超过15的字符，看到程序停在了一个判断语句的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup3.png" alt="writeup3.PNG"></p>
 </li>
-<li><p>继续按F8跟进程序，发现程序给出了一段关于flag的字符。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup4.png" alt="writeup4.PNG"></p>
+<li>
+<p>继续按F8跟进程序，发现程序给出了一段关于flag的字符。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup4.png" alt="writeup4.PNG"></p>
 </li>
-<li><p>然后用IDA打开程序进行静态分析，IDA并没有直接找到main函数，所以需要我们手动去找。通过动态调试知道程序为了反调试调用了Windows库中的FindWindowA函数，所以直接全局搜索函数名，找到了main函数所在的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup5.png" alt="writeup5.PNG"></p>
+<li>
+<p>然后用IDA打开程序进行静态分析，IDA并没有直接找到main函数，所以需要我们手动去找。通过动态调试知道程序为了反调试调用了Windows库中的FindWindowA函数，所以直接全局搜索函数名，找到了main函数所在的位置。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup5.png" alt="writeup5.PNG"></p>
 </li>
-<li><p>按F5查看伪代码。发现打印字符的程序段藏在一个for循环里。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup6.png" alt="writeup6.PNG"></p>
+<li>
+<p>按F5查看伪代码。发现打印字符的程序段藏在一个for循环里。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup6.png" alt="writeup6.PNG"></p>
 </li>
-<li><p>继续通过OD跟进程序，在程序进行两次窗口检查后遇到另一个判断语句。更改ZF标志位，让程序不跳转，继续向下执行（下方的跳转也按照相同的思路）。程序这时打印出了flag中的一部分。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup7.png" alt="writeup7.PNG"></p>
+<li>
+<p>继续通过OD跟进程序，在程序进行两次窗口检查后遇到另一个判断语句。更改ZF标志位，让程序不跳转，继续向下执行（下方的跳转也按照相同的思路）。程序这时打印出了flag中的一部分。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup7.png" alt="writeup7.PNG"></p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup8.png" alt="writeup8.PNG"></p>
 </li>
-<li><p>IDA中看到程序的末端调用了两个函数，查看第一个函数伪代码，发现程序调用IsDebuggerPresent函数。在OD中按F7单步跟进。根据之前的思路破坏程序的跳转，再次打印出了一部分字符串。</p>
+<li>
+<p>IDA中看到程序的末端调用了两个函数，查看第一个函数伪代码，发现程序调用IsDebuggerPresent函数。在OD中按F7单步跟进。根据之前的思路破坏程序的跳转，再次打印出了一部分字符串。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup9.png" alt="writeup9.PNG"></p>
 </li>
-<li><p>根据之前的方法跟进第二个函数，最后打印出来所有的字符串，就是完整的flag。</p>
+<li>
+<p>根据之前的方法跟进第二个函数，最后打印出来所有的字符串，就是完整的flag。</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup11.png" alt="writeup11.PNG"></p>
 </li>
 </ol>
