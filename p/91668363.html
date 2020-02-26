@@ -15,18 +15,20 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="ctypes学习笔记二 ¶——用python写一个调试器 ¶ctypes创建进程： 1234import my_debuggerdebugger &#x3D; my_debugger.debugger()debugger.load(b&quot;.&#x2F;01-ErrorShow.exe&quot;)  # 这里也要传递bytes 主要是调用了kernel32.CreateProcessA这个API函数： 该函数定义如下： 1234">
+  <meta name="description" content="ctypes学习笔记二 ——用python写一个调试器 ctypes创建进程： 1234import my_debuggerdebugger &#x3D; my_debugger.debugger()debugger.load(b&quot;.&#x2F;01-ErrorShow.exe&quot;)  # 这里也要传递bytes 主要是调用了kernel32.CreateProcessA这个API函数： 该函数定义如下： 123456">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ctypes学习笔记二——用python写一个调试器">
 <meta property="og:url" content="http://guiu.xyz/p/91668363.html">
 <meta property="og:site_name" content="Hcl的个人小站">
-<meta property="og:description" content="ctypes学习笔记二 ¶——用python写一个调试器 ¶ctypes创建进程： 1234import my_debuggerdebugger &#x3D; my_debugger.debugger()debugger.load(b&quot;.&#x2F;01-ErrorShow.exe&quot;)  # 这里也要传递bytes 主要是调用了kernel32.CreateProcessA这个API函数： 该函数定义如下： 1234">
+<meta property="og:description" content="ctypes学习笔记二 ——用python写一个调试器 ctypes创建进程： 1234import my_debuggerdebugger &#x3D; my_debugger.debugger()debugger.load(b&quot;.&#x2F;01-ErrorShow.exe&quot;)  # 这里也要传递bytes 主要是调用了kernel32.CreateProcessA这个API函数： 该函数定义如下： 123456">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20200107193906049.png">
 <meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20200107193819624.png">
@@ -251,8 +253,8 @@
 
       
         <h1>ctypes学习笔记二</h1>
-<h2 id="p-align-right-——用python写一个调试器-p"><a class="header-anchor" href="#p-align-right-——用python写一个调试器-p">¶</a><p align="right">——用python写一个调试器</p></h2>
-<h3 id="ctypes创建进程："><a class="header-anchor" href="#ctypes创建进程：">¶</a>ctypes创建进程：</h3>
+<h2 id="p-align-right-——用python写一个调试器-p"><a class="header-anchor" href="#p-align-right-——用python写一个调试器-p"></a><p align="right">——用python写一个调试器</p></h2>
+<h3 id="ctypes创建进程："><a class="header-anchor" href="#ctypes创建进程："></a>ctypes创建进程：</h3>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">debugger.load(<span class="string">b"./01-ErrorShow.exe"</span>)  <span class="comment"># 这里也要传递bytes</span></span><br></pre></td></tr></table></figure>
 <p>主要是调用了<code>kernel32.CreateProcessA</code>这个API函数：</p>
 <p>该函数定义如下：</p>
@@ -264,7 +266,7 @@
 <p>调用成功会打印出进程的<code>PID</code>:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[*] We have successfully launched the <span class="keyword">process</span>!</span><br><span class="line">[*] The <span class="keyword">Process</span> ID I have is: <span class="number">14732</span></span><br></pre></td></tr></table></figure>
 <hr>
-<h3 id="ctypes-附加进程调试："><a class="header-anchor" href="#ctypes-附加进程调试：">¶</a>ctypes 附加进程调试：</h3>
+<h3 id="ctypes-附加进程调试："><a class="header-anchor" href="#ctypes-附加进程调试："></a>ctypes 附加进程调试：</h3>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">pid = input(<span class="string">"Enter the PID of the process to attach to:"</span>)</span><br><span class="line">debugger.attach(int(pid))</span><br><span class="line">debugger.detach()</span><br></pre></td></tr></table></figure>
 <p>用到了三个<code>API</code>函数：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">OpenProcess</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwDesiredAccess,</span></span></span><br><span class="line"><span class="function"><span class="params">  BOOL  bInheritHandle,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwProcessId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
@@ -282,7 +284,7 @@
 <p>笔记中的代码在这里下载：<a href="https://nostarch.com/download/ghpython_src.zip" target="_blank" rel="noopener">python灰帽编程随书代码</a></p>
 <p>原书的代码是<code>python2</code>，我用的<code>python3</code>，<code>ctypes</code>库的用法区别不大，有疑问请阅读<code>ctypes</code>官方文档。</p>
 <hr>
-<h3 id="获取CPU寄存器的状态："><a class="header-anchor" href="#获取CPU寄存器的状态：">¶</a>获取CPU寄存器的状态：</h3>
+<h3 id="获取CPU寄存器的状态："><a class="header-anchor" href="#获取CPU寄存器的状态："></a>获取CPU寄存器的状态：</h3>
 <p><strong>CPU寄存器的功能解释：</strong></p>
 <table>
 <thead>
@@ -336,7 +338,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">OpenThread</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwDesiredAccess,</span></span></span><br><span class="line"><span class="function"><span class="params">  BOOL  bInheritHandle,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwThreadId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
 <p><a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthread" target="_blank" rel="noopener">具体文档在这里</a></p>
 <hr>
-<h3 id="枚举线程："><a class="header-anchor" href="#枚举线程：">¶</a>枚举线程：</h3>
+<h3 id="枚举线程："><a class="header-anchor" href="#枚举线程："></a>枚举线程：</h3>
 <p>线程是程序运行的最小单位，所以我们必须知道一个进程运行了多少个线程，有哪些线程，才能进一步分析程序的行为。首先的准备工作是创建进程快照，用到的<code>API</code>函数是<code>CreateToolhelp32Snapshot</code>:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">CreateToolhelp32Snapshot</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwFlags,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD th32ProcessID</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
 <p><a href="https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot" target="_blank" rel="noopener">具体文档在这里</a></p>
@@ -470,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">ctypes学习笔记二</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#p-align-right-——用python写一个调试器-p"><span class="nav-number">1.1.</span> <span class="nav-text">¶——用python写一个调试器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ctypes创建进程："><span class="nav-number">1.1.1.</span> <span class="nav-text">¶ctypes创建进程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctypes-附加进程调试："><span class="nav-number">1.1.2.</span> <span class="nav-text">¶ctypes 附加进程调试：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取CPU寄存器的状态："><span class="nav-number">1.1.3.</span> <span class="nav-text">¶获取CPU寄存器的状态：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#枚举线程："><span class="nav-number">1.1.4.</span> <span class="nav-text">¶枚举线程：</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">ctypes学习笔记二</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#p-align-right-——用python写一个调试器-p"><span class="nav-number">1.1.</span> <span class="nav-text">——用python写一个调试器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ctypes创建进程："><span class="nav-number">1.1.1.</span> <span class="nav-text">ctypes创建进程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctypes-附加进程调试："><span class="nav-number">1.1.2.</span> <span class="nav-text">ctypes 附加进程调试：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取CPU寄存器的状态："><span class="nav-number">1.1.3.</span> <span class="nav-text">获取CPU寄存器的状态：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#枚举线程："><span class="nav-number">1.1.4.</span> <span class="nav-text">枚举线程：</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -618,5 +620,12 @@
   
 
   
-</body>
+
+
+  <script async src="https://script-1256884783.file.myqcloud.com/cursor/fireworks.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/live2d-widget@^3.1.3/lib/L2Dwidget.min.js"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
 </html>
