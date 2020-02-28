@@ -295,9 +295,13 @@
 <p>然后保存退出，重新打开<code>typora</code>，粘贴图片进去就可以自动上传了。</p>
 <p>效果图：</p>
 <p><img src="http://sz.guiu.xyz/images/2020/02/26/Peek-2020-02-26-23-36.gif" alt="Peek-2020-02-26-23-36.gif"></p>
+<div class="note info">
+            <p><code>typora</code>不支持直接粘贴<code>gif</code>图片，所以插入动图需要<code>ctrl+shift+i</code>，然后手动选择动图添加，之后也会自动上传替换。</p>
+          </div>
 <h2 id="自定义chevereto上传用户和上传相册（可选）"><a class="header-anchor" href="#自定义chevereto上传用户和上传相册（可选）"></a>自定义<code>chevereto</code>上传用户和上传相册（可选）</h2>
 <p><code>chevereto</code>的<code>api</code>默认会新建一个相册，但是会有<code>bug</code>，就是在相册菜单下找不到这个相册，只能从图片菜单下去打开，所以可以按照下面的方法修改<code>api</code>上传的默认相册和用户。</p>
-<p>打开<code>chevereto</code>的<code>web</code>目录，将默认的<code>app/routes/route.api.php</code>的文件复制到<code>app/routes/overrides/route.api.php</code>文件夹，</p>
+<p>打开<code>chevereto</code>的<code>web</code>目录，将默认的<code>app/routes/route.api.php</code>的文件复制到</p>
+<p><code>app/routes/overrides/route.api.php</code>文件夹，</p>
 <p>把这段代码：</p>
 <figure class="highlight php"><figcaption><span>rout.api.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHV\Image::uploadToWebsite($source);</span><br></pre></td></tr></table></figure>
 <p>改成这个：(将<code>juanito</code>更换成目标用户名或用户id)</p>
