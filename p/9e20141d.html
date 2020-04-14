@@ -336,14 +336,14 @@
 <li><strong>Stable(Fast) Mode</strong>：使用类似数组（<code>C Struct</code>）结构来存储对象的属性并使用 <code>Offset</code> 进行访问。</li>
 </ul>
 </blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;<span class="attr">x</span> : <span class="number">1</span>&#125;;</span><br><span class="line">%DebugPrint(a);</span><br><span class="line"><span class="built_in">Object</span>.create(a);</span><br><span class="line">%DebugPrint(a);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><figcaption><span>poc2.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;<span class="attr">x</span> : <span class="number">1</span>&#125;;</span><br><span class="line">%DebugPrint(a);</span><br><span class="line"><span class="built_in">Object</span>.create(a);</span><br><span class="line">%DebugPrint(a);</span><br></pre></td></tr></table></figure>
 <p><img src="http://sz.guiu.xyz/images/image-20200414132308805541e4bdd7608cb10.png" alt="image-20200414132308805"></p>
 <p><code>ObjectCreate()</code>会把一个<code>Object</code>全部的属性值都放到<code>properties</code>中存储，并将原先的线性结构改成<code>hash</code>表的字典结构。</p>
 <h2 id="利用"><a class="header-anchor" href="#利用"></a>利用</h2>
 <p><strong>真正的漏洞在于：</strong></p>
 <p>当执行了<code>ObjectCreate()</code>之后，原本<code>Stable(Fast) Mode</code>的属性会被转化为<code>Dictionary Mode</code>，正常情况下，<code>JIT</code>生成的<code>IR-Code</code>在每次访问属性之前都会做类型检查，然而操作标识被设置为<code>kNoWrite</code>之后，会跳过之后的类型检查，<code>JIT</code>优化后的代码依旧按照<code>Stable(Fast) Mode</code>使用<code>offset</code>访问属性，造成了内存泄露。</p>
 <h3 id="利用步骤"><a class="header-anchor" href="#利用步骤"></a>利用步骤</h3>
-<p>可以构造一个函数，首先访问一次其内部变量，然后调用<code>ObjectCreate</code>操作，再次访问另一个变量，那么可能造成第二个变量的类型检查消失，然后利用<code>DictionaryProperties</code>和<code>FastProperties</code>对属性的访问方式区来执行任意代码。</p>
+<p>可以构造一个函数，首先访问一次其内部变量，然后调用<code>ObjectCreate</code>操作，再次访问另一个变量，那么可能造成第二个变量的类型检查消失，然后利用<code>DictionaryProperties</code>和<code>FastProperties</code>对属性的访问方式区别来执行任意代码。</p>
 <p>首先构造一个数组<code>x</code>，初始化时赋予属性<code>a=0x1234</code>，增加属性<code>b=0x5678</code></p>
 <p>构造函数<code>bad_create</code>：首先访问<code>x.a</code>，这里可以通过类型检查，而在后续返回<code>x.b</code>，由于<code>JSCreate</code>的属性是<code>kNoWrite</code>的，则返回之前的<code>x.b</code>二次检查消失，造成仍然返回一个与<code>x.b</code>偏移相同的数据</p>
 <p>由于<code>Properties</code>的内存分布发生变化，所以返回值一定不会是<code>0x5678</code>。</p>
