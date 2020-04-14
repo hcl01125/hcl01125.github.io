@@ -296,7 +296,7 @@
 <p>发现还是不通过，更换多个版本发现仍然会出现新问题。总之就是不匹配。</p>
 <p>然后回到最新版本，手动将关于漏洞的改动撤销，编译通过。</p>
 <p>使用<a href="https://xz.aliyun.com/t/5413" target="_blank" rel="noopener">Google V8引擎的CVE-2018-17463漏洞分析</a> 文中的<code>poc</code>和<code>exp</code>脚本测试：</p>
-<p>结果：<code>poc</code>能探测到漏洞但是<code>exp</code>拿不到<code>shell</code>，应该是后续的利用链。</p>
+<p>结果：<code>poc</code>能探测到漏洞但是<code>exp</code>拿不到<code>shell</code>，应该是后续的利用链出了问题。</p>
 <p>无奈重新编译，仔细查看官方文档，发现官方仓库中没有<code>build</code>文件夹（这里才反应过来，<code>build</code>是git子模块啊怎么可能在一个仓库里被同步，也不方便管理啊），猜想<code>build</code>文件夹是<code>gclient sync</code>同步的时候自动下载的。于是去翻官方文档，发现确实是需要每次回退版本之后都要<code>gclient sync</code>一下（不断迭代过程中构建方式发生了变化）。而我的同步操作是在版本回退之前做的，难怪最新版本能够编译通过。</p>
 <p>解决：</p>
 <p>回退到修复前的版本，再次使用<code>gclient sync</code>命令，同步当前适合的编译脚本？？？（查这个命令之后再写），漫长的等待之后，再编译，成功了。</p>
