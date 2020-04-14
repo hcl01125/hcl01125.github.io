@@ -188,6 +188,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/91668363.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/p/91668363.html" class="post-title-link" itemprop="url">ctypes学习笔记二——用python写一个调试器</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-07 20:09:03" itemprop="dateCreated datePublished" datetime="2020-01-07T20:09:03+08:00">2020-01-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1>ctypes学习笔记二</h1>
+<h2 id="p-align-right-——用python写一个调试器-p"><a class="header-anchor" href="#p-align-right-——用python写一个调试器-p"></a><p align="right">——用python写一个调试器</p></h2>
+<h3 id="ctypes创建进程："><a class="header-anchor" href="#ctypes创建进程："></a>ctypes创建进程：</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">debugger.load(<span class="string">b"./01-ErrorShow.exe"</span>)  <span class="comment"># 这里也要传递bytes</span></span><br></pre></td></tr></table></figure>
+<p>主要是调用了<code>kernel32.CreateProcessA</code>这个API函数：</p>
+<p>该函数定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CreateProcessA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR                lpApplicationName,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPSTR                 lpCommandLine,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPSECURITY_ATTRIBUTES lpProcessAttributes,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPSECURITY_ATTRIBUTES lpThreadAttributes,</span></span></span><br><span class="line"><span class="function"><span class="params">  BOOL                  bInheritHandles,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD                 dwCreationFlags,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPVOID                lpEnvironment,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR                lpCurrentDirectory,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPSTARTUPINFOA        lpStartupInfo,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPPROCESS_INFORMATION lpProcessInformation</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa" target="_blank" rel="noopener">具体文档在这里</a></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/p/91668363.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/1df4e45f.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -939,83 +1020,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/1a4433a1.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="guiu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hcl的个人小站">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/p/1a4433a1.html" class="post-title-link" itemprop="url">xdebug开发调试PHP</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-09-12 10:15:18" itemprop="dateCreated datePublished" datetime="2019-09-12T10:15:18+08:00">2019-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%98%E8%85%BE%E7%BA%AA%E5%AE%9E/" itemprop="url" rel="index"><span itemprop="name">折腾纪实</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1>【VSCode插件】xdebug开发调试PHP</h1>
-<h2 id="摘要"><a class="header-anchor" href="#摘要"></a>摘要</h2>
-<p>Xdebug 在开发过程中可以帮我们查看具体的运行和步骤，以及每行代码执行的结果，在学习和解决代码问题的时候可以提供非常大的便利。PHPStorm 也可以进行 Xdebug 调试，VScode 也可以进行配置调试，且比 PHPStorm 的配置简单很多，不用每次去创建一个 Server，再创建一个 web page 服务。相比之下，VSCode 的界面好看，且简单方便，值得学习一下。</p>
-<p>使用了一段时间，但是偶尔还是会出现一些问题，故而进行了整理总结。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/p/1a4433a1.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1088,7 +1092,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
