@@ -178,11 +178,11 @@
             
             <tag> python </tag>
             
+            <tag> linux </tag>
+            
             <tag> gnome </tag>
             
             <tag> nautilus </tag>
-            
-            <tag> linux </tag>
             
         </tags>
       
@@ -207,13 +207,13 @@
       
         <tags>
             
-            <tag> linux </tag>
-            
             <tag> kali </tag>
             
             <tag> Aria2c </tag>
             
             <tag> Camtd </tag>
+            
+            <tag> linux </tag>
             
         </tags>
       
