@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.1">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -30,14 +30,14 @@
 <meta property="og:site_name" content="Hcl的个人小站">
 <meta property="og:description" content="使用python3解析html网页表格 实习实在是太无聊了，看书是看不进去的，跟着老师对着那些宛如ZZ的上古软件点点点那更是不可能，于是想起之前找学弟PY，想解析一下课程表的页面，无果，于是就写着玩玩。虽然弄出来好像也没啥卵用…… 需求 使用python3解析html网页，并输出成json结构树 参考代码： 1https:&#x2F;&#x2F;github.com&#x2F;schmijos&amp;#">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20191024132057056.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20191024133822154.png">
+<meta property="og:image" content="http://47.107.37.206/images/2020/02/25/image-20191024132057056.png">
+<meta property="og:image" content="http://47.107.37.206/images/2020/02/25/image-20191024133822154.png">
 <meta property="article:published_time" content="2019-10-24T05:48:39.000Z">
 <meta property="article:modified_time" content="2019-10-24T05:48:39.000Z">
 <meta property="article:author" content="guiu">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20191024132057056.png">
+<meta name="twitter:image" content="http://47.107.37.206/images/2020/02/25/image-20191024132057056.png">
 
 <link rel="canonical" href="http://guiu.xyz/p/3c330a16.html">
 
@@ -259,7 +259,7 @@
 <a id="more"></a>
 <h2 id="问题"><a class="header-anchor" href="#问题"></a>问题</h2>
 <p>先上图：</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/image-20191024132057056.png" alt="image-20191024132057056.png"></p>
+<p><img src="http://47.107.37.206/images/2020/02/25/image-20191024132057056.png" alt="image-20191024132057056.png"></p>
 <blockquote>
 <p>原来的程序没有考虑合并单元格的情况，导致复杂表的解析结果错位，</p>
 <p>所以需要在原来的基础上对跨行或跨列的情况进行处理。</p>
@@ -272,9 +272,9 @@
 <p>example_of_usage.py:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -----------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Created:     04.03.2014</span></span><br><span class="line"><span class="comment"># Copyright:   (c) Josua Schmid 2014</span></span><br><span class="line"><span class="comment"># Licence:     AGPLv3</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Sample script for parsing HTML tables</span></span><br><span class="line"><span class="comment"># -----------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">from</span> pprint <span class="keyword">import</span> pprint</span><br><span class="line"><span class="keyword">from</span> html_table_parser <span class="keyword">import</span> HTMLTableParser</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">url_get_contents</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="string">""" Opens a website and read its binary contents (HTTP Response Body) """</span></span><br><span class="line">    req = urllib.request.Request(url=url)</span><br><span class="line">    f = urllib.request.urlopen(req)</span><br><span class="line">    <span class="keyword">return</span> f.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># url = 'http://guiu.xyz/StuProductionSchedule.html'</span></span><br><span class="line">    <span class="comment"># xhtml = url_get_contents(url).decode('utf-8')</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'./StuProductionSchedule.html'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        xhtml = f.read()</span><br><span class="line"></span><br><span class="line">        p = HTMLTableParser()</span><br><span class="line">        p.feed(xhtml)</span><br><span class="line">        fff = p.tables</span><br><span class="line">        pprint(p.tables)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
 <p>小哥还给了输出csv的选项：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./html_table_converter -u http://guiu.xyz/StuProductionSchedule.html -o metaltrain</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./html_table_converter -u http://47.107.37.206/StuProductionSchedule.html -o metaltrain</span><br></pre></td></tr></table></figure>
 <p>结果：</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/image-20191024133822154.png" alt="image-20191024133822154.png"></p>
+<p><img src="http://47.107.37.206/images/2020/02/25/image-20191024133822154.png" alt="image-20191024133822154.png"></p>
 <p>效果完美。</p>
 <p>下一步直接将代码输出的list转为json文件就ok了，下课了，鸽一手。</p>
 
@@ -378,7 +378,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">使用python3解析html网页表格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">1.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code"><span class="nav-number">1.3.</span> <span class="nav-text">code</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text">使用python3解析html网页表格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">1.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code"><span class="nav-number">1.3.</span> <span class="nav-text">code</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -394,7 +394,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -407,7 +407,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -436,7 +436,7 @@
 
   
   &copy; 2019 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
 
   <span class="with-love">
     <i class="fa fa-user"></i>
@@ -444,7 +444,7 @@
   <span class="author" itemprop="copyrightHolder">guiu</span>
 
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1

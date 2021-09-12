@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="给Charles添加url分类导出的功能 每次写报告时整理url都是一个麻烦的工作，所以想到写个脚本来自动化完成。使用了一段时间之后发现还是不够方便，于是干脆集成到Charles中算了。 0x0 确定要实现的功能 Charles有Urls导出的功能：  当选中要导出的url之后，点击Copy URLs按钮会将url列表导出到剪贴板中，因此找到代码中的这个位置就能发现我们要处理的url列表了，然后对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给charles添加url分类导出的功能">
+<meta property="og:url" content="http://guiu.xyz/p/dedf6615.html">
+<meta property="og:site_name" content="Hcl的个人小站">
+<meta property="og:description" content="给Charles添加url分类导出的功能 每次写报告时整理url都是一个麻烦的工作，所以想到写个脚本来自动化完成。使用了一段时间之后发现还是不够方便，于是干脆集成到Charles中算了。 0x0 确定要实现的功能 Charles有Urls导出的功能：  当选中要导出的url之后，点击Copy URLs按钮会将url列表导出到剪贴板中，因此找到代码中的这个位置就能发现我们要处理的url列表了，然后对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://47.107.37.206/images/image-20210905011929157870ab719c32c5d37.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-202109050117222817c331838a2caf6e8.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-2021090501181033336a59eed2eeb59e6.png">
+<meta property="article:published_time" content="2021-09-07T16:09:38.000Z">
+<meta property="article:modified_time" content="2021-09-07T16:09:38.000Z">
+<meta property="article:author" content="guiu">
+<meta property="article:tag" content="逆向">
+<meta property="article:tag" content="折腾纪实">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.107.37.206/images/image-20210905011929157870ab719c32c5d37.png">
+
+<link rel="canonical" href="http://guiu.xyz/p/dedf6615.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>给charles添加url分类导出的功能 | Hcl的个人小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hcl的个人小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/dedf6615.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          给charles添加url分类导出的功能
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-08 00:09:38" itemprop="dateCreated datePublished" datetime="2021-09-08T00:09:38+08:00">2021-09-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">CTF相关</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1>给Charles添加url分类导出的功能</h1>
+<p>每次写报告时整理url都是一个麻烦的工作，所以想到写个脚本来自动化完成。使用了一段时间之后发现还是不够方便，于是干脆集成到Charles中算了。</p>
+<h2 id="0x0-确定要实现的功能"><a class="header-anchor" href="#0x0-确定要实现的功能"></a>0x0 确定要实现的功能</h2>
+<p>Charles有Urls导出的功能：</p>
+<p><img src="http://47.107.37.206/images/image-20210905011929157870ab719c32c5d37.png" alt="image-20210905011929157"></p>
+<p>当选中要导出的url之后，点击<code>Copy URLs</code>按钮会将url列表导出到剪贴板中，因此找到代码中的这个位置就能发现我们要处理的url列表了，然后对列表中的url进行去重，分类，然后结构化导出，一站式搞定，再也不用自己手动处理了，真棒。</p>
+<a id="more"></a>
+<h2 id="0x1-获取url-list"><a class="header-anchor" href="#0x1-获取url-list"></a>0x1 获取url list</h2>
+<p>一番搜索发现<code>Copy URLs</code>的类在<code>com/xk72/charles/gui/transaction/actions/CopyURLsAction</code>，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Decompiled with: CFR 0.151</span></span><br><span class="line"><span class="comment">// Class Version: 8</span></span><br><span class="line"><span class="keyword">package</span> com.xk72.charles.gui.transaction.actions;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.gui.transaction.actions.CopyURLAction;</span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.model.D;</span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.model.ModelNode;</span><br><span class="line"><span class="keyword">import</span> java.awt.Toolkit;</span><br><span class="line"><span class="keyword">import</span> java.awt.datatransfer.StringSelection;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.ActionEvent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CopyURLsAction</span></span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">CopyURLAction</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ModelNode[] nodes;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CopyURLsAction</span><span class="params">(ModelNode[] modelNodeArray)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="string">"Copy URLs"</span>);</span><br><span class="line">        <span class="keyword">this</span>.nodes = modelNodeArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CopyURLsAction</span><span class="params">(ModelNode modelNode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> ModelNode[]&#123;modelNode&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">actionPerformed</span><span class="params">(ActionEvent actionEvent)</span> </span>&#123;</span><br><span class="line">        StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        D d = <span class="keyword">new</span> D();</span><br><span class="line">        d.a(<span class="keyword">this</span>.nodes);</span><br><span class="line">        <span class="keyword">this</span>.appendURLs(d.a().toArray(<span class="keyword">new</span> ModelNode[d.a().size()]), stringBuffer);</span><br><span class="line">        StringSelection stringSelection = <span class="keyword">new</span> StringSelection(stringBuffer.toString());</span><br><span class="line">        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>actionPerformed</code>方法是点击按钮后的具体实现逻辑。<code>this.nodes</code>中存放的是点击时用户选中的url列表，这里<code>actionPerformed</code>的功能是将<code>this.nodes</code>中的列表存放在系统剪贴板中。</p>
+<p>那么拿到<code>this.nodes</code>中的值并处理就可以了。</p>
+<p>由于之前已经写了Python的处理脚本，不想用java再重写一遍了，于是偷懒的直接在末尾调用python脚本处理了。既然已经将url列表放在剪贴板中了，python只需要读取剪贴板数据，处理后再写回剪贴板即可，连参数都省了。</p>
+<p>修改<code>CopyURLsAction.actionPerformed</code>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">actionPerformed</span><span class="params">(ActionEvent actionEvent)</span> </span>&#123;</span><br><span class="line">        StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        D d = <span class="keyword">new</span> D();</span><br><span class="line">        d.a(<span class="keyword">this</span>.nodes);</span><br><span class="line">        <span class="keyword">this</span>.appendURLs(d.a().toArray(<span class="keyword">new</span> ModelNode[d.a().size()]), stringBuffer);</span><br><span class="line">        StringSelection stringSelection = <span class="keyword">new</span> StringSelection(stringBuffer.toString());</span><br><span class="line">        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">"python ./plugin/dealurl.py"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">            CharlesContext.getInstance().info(<span class="string">"调用python失败！\n"</span> + e2.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><code>CharlesContext.getInstance().info()</code>方法是Charles自己封装的一个弹对话框的方法。</p>
+<h2 id="0x2-实现分类和导出功能"><a class="header-anchor" href="#0x2-实现分类和导出功能"></a>0x2 实现分类和导出功能</h2>
+<p>写一个对url分类并导出到剪贴板的脚本<code>dealurl.py</code>:</p>
+<figure class="highlight python"><figcaption><span>deal.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># 自动化处理url并分类</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> win32api</span><br><span class="line"><span class="keyword">import</span> win32con</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"><span class="keyword">import</span> pyperclip</span><br><span class="line"></span><br><span class="line"><span class="comment"># filepath: test.url</span></span><br><span class="line"><span class="comment"># return: url_list</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UrlClassification</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># 保存各个分类的正则表达式和每次匹配任务的结果</span></span><br><span class="line">    <span class="comment"># -- <span class="doctag">TODO:</span> 优化同时满足多个规则时的处理逻辑</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> 正则有待优化</span></span><br><span class="line">    <span class="comment"># -- <span class="doctag">TODO:</span> 优化匹配顺序</span></span><br><span class="line">    <span class="comment"># 由于python3.6之后字典是有序的才能这么玩</span></span><br><span class="line">    category = &#123;</span><br><span class="line">        <span class="string">"resource"</span>: [</span><br><span class="line">            <span class="string">"^(https?)://[\w-]+(\.[\w-]+)+(/[^?]*)+\.(htm|html|js|css|jpg|jpeg|png|gif|webp|bmp|ico|svg|woff2|woff|ttf)($|[^\w?/.]+[^/]*$)"</span>, []</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment"># 敏感文件: zip/cab/tar/rar/7z/gz exe/dll/msi/bat/psl jar/so/dex/apk/sh</span></span><br><span class="line">        <span class="string">"sensitie-files"</span>: [</span><br><span class="line">            <span class="string">"^(https?)://[\w-]+(\.[\w-]+)+(/[^?]*)+\.(zip|tar|cab|rar|gz|7z|exe|dll|msi|bat|ps1|jar|so|dex|apk|sh|abs|run|pkg|com|cmd|dmg)($|[^\w?/.]+[^/]*$)"</span>, []</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment"># logs相关，主要是判断域名中有没有相关字符串，不一定准确</span></span><br><span class="line">        <span class="string">"logs"</span>: [</span><br><span class="line">            <span class="string">"((^(https?)://logs?([-_][\w]*)*(\.[\w-]+)+(/[^?]*)+$)|(^(https?)://[\w-]+(\.[\w-]+)+(/[\w-]*)+logs?([-_][^?]*)*$))"</span>, []</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="string">"configure"</span>: [</span><br><span class="line">            <span class="string">"^(https?)://[\w-]+(\.[\w-]+)+(/[^?]*)+\.(conf|config|json|yml|ini|properties|xml|plist|toml|tml|md)($|[^\w?/.]+[^/]*$)"</span>, []</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 接口的定义很广范，甚至包括了后面的logs分类，未定义的source格式, 未定义的敏感文件，所以把符合条件的都算进来</span></span><br><span class="line">        <span class="comment">#-- <span class="doctag">TODO:</span> 突然意识到文件种类太多了，这样无脑算进接口分类中会出事，所以还是用黑名单吧</span></span><br><span class="line">        <span class="comment">#-- <span class="doctag">TODO:</span> 以后再扩充都是可以的，没匹配上的还是放在others比较保险</span></span><br><span class="line">        <span class="string">"interfaces"</span>: [</span><br><span class="line">            <span class="string">"^(https?)://[\w-]+(\.[\w-]+)+(/[_\w-]+)+([^?]+\.(do|action|asmx|php|jsp|asp|aspx|cgi))*[^\w?/.]*$"</span>, []</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="string">"others"</span>: [</span><br><span class="line">            <span class="string">"^.*$"</span>, []</span><br><span class="line">        ],</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存最终的结果</span></span><br><span class="line">    url_list_split = &#123;</span><br><span class="line">        <span class="string">"http"</span>: &#123;</span><br><span class="line">            <span class="string">"urls"</span>: [],</span><br><span class="line">            <span class="string">"category"</span>: &#123;&#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"https"</span>: &#123;</span><br><span class="line">            <span class="string">"urls"</span>: [],</span><br><span class="line">            <span class="string">"category"</span>: &#123;&#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *category)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        <span class="comment"># 每个类别实际上是一个正则表达式，符合条件的分为一类</span></span><br><span class="line">        <span class="comment"># 有几种预设的类别，所以这里只添加每次任务特殊的分类</span></span><br><span class="line">        <span class="keyword">if</span> category:</span><br><span class="line">            <span class="comment"># 删除others项，添加userdefine项后再添加回去</span></span><br><span class="line">            <span class="keyword">del</span> self.category[<span class="string">"others"</span>]</span><br><span class="line">            self.category[<span class="string">"userdefine"</span>] = [category[<span class="number">0</span>], []]</span><br><span class="line">            self.category[<span class="string">"others"</span>] = [<span class="string">"^.*$"</span>, []]</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># * 在charles.jar中调用，所以直接从剪贴板中获取值，不读文件了</span></span><br><span class="line">        <span class="comment"># self.url_list = self.open_urlfile(filepath=filepath)</span></span><br><span class="line">        self.url_list = pyperclip.paste().splitlines()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 在charles.jar中调用的时候该方法废弃</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open_urlfile</span><span class="params">(self, filepath)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">with</span> open(filepath, <span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">                <span class="keyword">return</span> f.read().splitlines()</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            print(<span class="string">"open &#123;&#125; error."</span>.format(filepath))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 去重</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove_repetition</span><span class="params">(self, list_u)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> list(set(list_u))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 排序</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sort_list</span><span class="params">(self, list_u)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> sorted(list_u, key=<span class="keyword">lambda</span> a: len(a))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 去掉后面的参数部分，因为用不着</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_url</span><span class="params">(self)</span>:</span></span><br><span class="line">        temp_list = []</span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> self.url_list:</span><br><span class="line">            url_p = urllib.parse.urlparse(urllib.parse.unquote(url))</span><br><span class="line">            <span class="comment"># -- <span class="doctag">TODO:</span> 这里有None的情况，判断下</span></span><br><span class="line">            <span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span> <span class="keyword">return</span> x <span class="keyword">if</span> x != <span class="literal">None</span> <span class="keyword">else</span> <span class="string">""</span></span><br><span class="line">            <span class="keyword">if</span> f(url_p.scheme) == <span class="string">""</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            url = <span class="string">"&#123;&#125;://&#123;&#125;&#123;&#125;"</span>.format(f(url_p.scheme),</span><br><span class="line">                                     f(url_p.hostname), f(url_p.path))</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 这里先分出https流量</span></span><br><span class="line">            <span class="keyword">if</span> url_p.scheme == <span class="string">"https"</span>:</span><br><span class="line">                self.url_list_split[<span class="string">"https"</span>][<span class="string">"urls"</span>].append(url)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.url_list_split[<span class="string">"http"</span>][<span class="string">"urls"</span>].append(url)</span><br><span class="line">            temp_list.append(url)</span><br><span class="line">        <span class="comment"># 排序和去重放这里,并且重写</span></span><br><span class="line">        self.url_list_split[<span class="string">"http"</span>][<span class="string">"urls"</span>] = self.sort_list(self.remove_repetition(self.url_list_split[<span class="string">"http"</span>][<span class="string">"urls"</span>]))</span><br><span class="line">        self.url_list_split[<span class="string">"https"</span>][<span class="string">"urls"</span>] = self.sort_list(self.remove_repetition(self.url_list_split[<span class="string">"https"</span>][<span class="string">"urls"</span>]))</span><br><span class="line">        self.url_list = temp_list</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 逐个遍历category list中的项, 给url_list分类</span></span><br><span class="line">    <span class="comment"># * 2021.9.4: 解决匹配逻辑的bug, 现在改成了按顺序匹配，规避同时符合多个规则的情况</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">match_catg</span><span class="params">(self, urllist)</span>:</span></span><br><span class="line">        <span class="comment"># others = []</span></span><br><span class="line">        <span class="keyword">if</span> len(urllist[<span class="string">"urls"</span>]) &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> urllist[<span class="string">"urls"</span>]:</span><br><span class="line">                <span class="keyword">for</span> cat <span class="keyword">in</span> self.category.keys():</span><br><span class="line">                    <span class="keyword">if</span> self.match(self.category[cat][<span class="number">0</span>], url):</span><br><span class="line">                        self.category[cat][<span class="number">1</span>].append(url)</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># 这里要深拷贝，否则urllist会被一起清掉</span></span><br><span class="line">            urllist[<span class="string">"category"</span>] = copy.deepcopy(self.category)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># clean self.category</span></span><br><span class="line">            <span class="keyword">for</span> cat <span class="keyword">in</span> self.category.keys():</span><br><span class="line">                self.category[cat][<span class="number">1</span>].clear()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># params:</span></span><br><span class="line">    <span class="comment"># cat: category的正则表达式</span></span><br><span class="line">    <span class="comment"># url: 待匹配的url</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">match</span><span class="params">(self, cat, url)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> (re.match(cat, url) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 输出匹配后的结果(将分好类排好序的结果格式化输出)</span></span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> 输出的格式需要改成markdown形式(标题+代码块)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">output</span><span class="params">(self)</span>:</span></span><br><span class="line">        output_str = <span class="string">""</span></span><br><span class="line">        output_tamp = <span class="string">"// &#123;0&#125;\n&#123;1&#125;\n"</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> catinfo <span class="keyword">in</span> self.url_list_split.keys():</span><br><span class="line">            output_str = output_str + <span class="string">"&#123;&#125;:\n\n```gfm\n"</span>.format(catinfo)</span><br><span class="line">            <span class="keyword">for</span> cat <span class="keyword">in</span> self.url_list_split[catinfo][<span class="string">"category"</span>].keys():</span><br><span class="line">                <span class="keyword">if</span> len(self.url_list_split[catinfo][<span class="string">"category"</span>][cat][<span class="number">1</span>]) &gt; <span class="number">0</span>:</span><br><span class="line">                    output_str = output_str + \</span><br><span class="line">                        output_tamp.format(cat, <span class="string">"\n"</span>.join(</span><br><span class="line">                        self.url_list_split[catinfo][<span class="string">"category"</span>][cat][<span class="number">1</span>])) + <span class="string">"\n"</span></span><br><span class="line">            output_str += <span class="string">"```\n\n"</span></span><br><span class="line">        <span class="comment"># debug: 在java中调用的时候不能使用print语句，否则可能会报BrokenPipeError</span></span><br><span class="line">        <span class="comment"># print(output_str)</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            pyperclip.copy(output_str)</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            win32api.MessageBox(<span class="number">0</span>, <span class="string">"导出到剪贴板失败!!\n\n&#123;&#125;"</span>.format(traceback.format_exc()), <span class="string">"Charles"</span>, win32con.MB_OK)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    s = UrlClassification()</span><br><span class="line">    <span class="comment"># 测试自定义规则</span></span><br><span class="line">    <span class="comment"># s = UrlClassification("^https?://.*test.*$")</span></span><br><span class="line">    s.parse_url()</span><br><span class="line">    <span class="comment"># s.remove_repetition()</span></span><br><span class="line">    <span class="comment"># s.sort_list()</span></span><br><span class="line">    s.match_catg(s.url_list_split[<span class="string">"http"</span>])</span><br><span class="line">    s.match_catg(s.url_list_split[<span class="string">"https"</span>])</span><br><span class="line">    s.output()</span><br><span class="line">    win32api.MessageBox(<span class="number">0</span>, <span class="string">"urls 分类完成, 结果存放在剪贴板中"</span>, <span class="string">"Charles"</span>, win32con.MB_OK)</span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    win32api.MessageBox(<span class="number">0</span>, <span class="string">"python脚本运行失败!!\n\n&#123;&#125;"</span>.format(traceback.format_exc()), <span class="string">"Charles"</span>, win32con.MB_OK)</span><br></pre></td></tr></table></figure>
+<h2 id="0x3-修改Charles-jar"><a class="header-anchor" href="#0x3-修改Charles-jar"></a>0x3 修改Charles.jar</h2>
+<p>上文中直接修改<code>CopyURLsAction.actionPerformed</code>是可以的，但是会影响本身的<code>Copy URLs</code>功能（剪贴板中的内容被替换成分类后的结果了），所以最好的办法还是另外添加一个按钮。</p>
+<p>搜索<code>CopyURLsAction</code>类的引用，很容易发现<code>Copy URLs</code>菜单项是在<code>com/xk72/charles/gui/session/popups/MultipleNodePopupMenu</code>中被定义的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(MouseEvent mouseEvent)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">this</span>.nodes.length == <span class="number">2</span> &amp;&amp; <span class="keyword">this</span>.nodes[<span class="number">0</span>] <span class="keyword">instanceof</span> Transaction &amp;&amp; <span class="keyword">this</span>.nodes[<span class="number">1</span>] <span class="keyword">instanceof</span> Transaction) &#123;</span><br><span class="line">           <span class="keyword">this</span>.add(<span class="keyword">new</span> DiffAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 这里新建了CopyURLs的菜单项</span></span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> CopyURLsAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> SaveTransactionsAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> ExportAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.addSeparator();</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> RepeatAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> AdvancedRepeatAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> ValidateAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.add(<span class="keyword">new</span> PublishAction(<span class="keyword">this</span>.nodes));</span><br><span class="line">       <span class="keyword">this</span>.addSeparator();</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">this</span>.navigator <span class="keyword">instanceof</span> a || <span class="keyword">this</span>.navigator <span class="keyword">instanceof</span> h) &#123;</span><br><span class="line">           <span class="keyword">this</span>.add(<span class="keyword">new</span> SwitchStructureNavigatorAction(<span class="keyword">this</span>.nodes, <span class="keyword">this</span>.navigator));</span><br><span class="line">       &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.navigator <span class="keyword">instanceof</span> p) &#123;</span><br><span class="line">           <span class="keyword">this</span>.add(<span class="keyword">new</span> SwitchSequenceNavigatorAction(<span class="keyword">this</span>.nodes, <span class="keyword">this</span>.navigator));</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">this</span>.addSeparator();</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">this</span>.addReorder()) &#123;</span><br><span class="line">           <span class="keyword">this</span>.addSeparator();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">this</span>.addFocus();</span><br><span class="line">       <span class="keyword">this</span>.addIgnore();</span><br><span class="line">       <span class="keyword">this</span>.addSeparator();</span><br><span class="line">       <span class="keyword">this</span>.addClear();</span><br><span class="line">       <span class="keyword">this</span>.addClearOthers();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>仿照上文<code>CopyURLsAction</code>类，写一个添加了调用python脚本的<code>UrlClassification</code>类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Decompiled with: CFR 0.151</span></span><br><span class="line"><span class="comment">// Class Version: 8</span></span><br><span class="line"><span class="keyword">package</span> com.xk72.charles.gui.transaction.actions;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.CharlesContext;</span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.gui.transaction.actions.CopyURLAction;</span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.model.D;</span><br><span class="line"><span class="keyword">import</span> com.xk72.charles.model.ModelNode;</span><br><span class="line"><span class="keyword">import</span> java.awt.Toolkit;</span><br><span class="line"><span class="keyword">import</span> java.awt.datatransfer.StringSelection;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.ActionEvent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UrlClassification</span></span></span><br><span class="line"><span class="class"><span class="keyword">extends</span> <span class="title">CopyURLAction</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ModelNode[] nodes;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UrlClassification</span><span class="params">(ModelNode[] modelNodeArray)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="string">"Export Classification Urls"</span>);</span><br><span class="line">        <span class="keyword">this</span>.nodes = modelNodeArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UrlClassification</span><span class="params">(ModelNode modelNode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> ModelNode[]&#123;modelNode&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">actionPerformed</span><span class="params">(ActionEvent actionEvent)</span> </span>&#123;</span><br><span class="line">        StringBuffer stringBuffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        D d = <span class="keyword">new</span> D();</span><br><span class="line">        d.a(<span class="keyword">this</span>.nodes);</span><br><span class="line">        <span class="keyword">this</span>.appendURLs(d.a().toArray(<span class="keyword">new</span> ModelNode[d.a().size()]), stringBuffer);</span><br><span class="line">        StringSelection stringSelection = <span class="keyword">new</span> StringSelection(stringBuffer.toString());</span><br><span class="line">        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, stringSelection);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">"python ./plugin/dealurl.py"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">            CharlesContext.getInstance().info(<span class="string">"调用python失败！\n"</span> + e2.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译为<code>.class</code>文件，并添加到charles.jar中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jar -uf .\charles.jar .\UrlClassification.class</span><br></pre></td></tr></table></figure>
+<p>然后修改<code>com/xk72/charles/gui/session/popups/MultipleNodePopupMenu.prepare	</code>，在<code>this.add(new CopyURLsAction(this.nodes));</code>之后添加：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建UrlClassification菜单项</span></span><br><span class="line"><span class="keyword">this</span>.add(<span class="keyword">new</span> UrlClassification(<span class="keyword">this</span>.nodes));</span><br></pre></td></tr></table></figure>
+<p>保存并编译charles.jar即可。</p>
+<p>然后替换安装目录下的<code>charles.jar</code>（默认路径为：<code>C:\Program Files\Charles\lib\charles.jar</code>）</p>
+<p>然后在charles安装根目录下新建一个plugin文件夹，将dealurl.py放在plugin文件夹下。（<code>C:\Program Files\Charles\plugin\dealurl.py</code>）</p>
+<h2 id="0x4-测试"><a class="header-anchor" href="#0x4-测试"></a>0x4 测试</h2>
+<p>重新启动Charles，测试功能：</p>
+<p><img src="http://47.107.37.206/images/image-202109050117222817c331838a2caf6e8.png" alt="image-20210905011722281"></p>
+<p><img src="http://47.107.37.206/images/image-2021090501181033336a59eed2eeb59e6.png" alt="image-20210905011810333"></p>
+<p>添加菜单项成功，测试分类功能正常。</p>
+<p>导出的url结果为：</p>
+<blockquote>
+<p>http:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; source</span><br><span class="line">http:&#x2F;&#x2F;www.qcmoke.site&#x2F;images&#x2F;loading-post.gif</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; others</span><br><span class="line">socket:&#x2F;&#x2F;mtalk.google.com</span><br></pre></td></tr></table></figure>
+<p>https:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; source</span><br><span class="line">https:&#x2F;&#x2F;www.qcmoke.site&#x2F;images&#x2F;favicon.jpg</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; interfaces</span><br><span class="line">https:&#x2F;&#x2F;sub.shuimo.win&#x2F;v1&#x2F;userinfo</span><br><span class="line">https:&#x2F;&#x2F;lp.open.weixin.qq.com&#x2F;connect&#x2F;l&#x2F;qrconnect</span><br><span class="line">https:&#x2F;&#x2F;app.widgetpack.com&#x2F;widget&#x2F;rating&#x2F;bootstrap</span><br><span class="line">https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;qcmoke&#x2F;mygitalk&#x2F;issues&#x2F;142&#x2F;comments</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; others</span><br><span class="line">https:&#x2F;&#x2F;clients4.google.com&#x2F;chrome-sync&#x2F;command&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;www.qcmoke.site&#x2F;live2dw&#x2F;assets&#x2F;mtn&#x2F;idle_02.mtn</span><br><span class="line">https:&#x2F;&#x2F;www.qcmoke.site&#x2F;live2dw&#x2F;assets&#x2F;haruto.physics.json</span><br><span class="line">https:&#x2F;&#x2F;6lnbuerx.api.lncldglobal.com&#x2F;1.1&#x2F;classes&#x2F;Counter&#x2F;5e640ae040595e0008b2e81f</span><br></pre></td></tr></table></figure>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>guiu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://guiu.xyz/p/dedf6615.html" title="给charles添加url分类导出的功能">http://guiu.xyz/p/dedf6615.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%80%86%E5%90%91/" rel="tag"># 逆向</a>
+              <a href="/tags/%E6%8A%98%E8%85%BE%E7%BA%AA%E5%AE%9E/" rel="tag"># 折腾纪实</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/p/9e20141d.html" rel="prev" title="V8引擎CVE-2018-17463漏洞分析记录">
+      <i class="fa fa-chevron-left"></i> V8引擎CVE-2018-17463漏洞分析记录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text">给Charles添加url分类导出的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x0-确定要实现的功能"><span class="nav-number">1.1.</span> <span class="nav-text">0x0 确定要实现的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x1-获取url-list"><span class="nav-number">1.2.</span> <span class="nav-text">0x1 获取url list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x2-实现分类和导出功能"><span class="nav-number">1.3.</span> <span class="nav-text">0x2 实现分类和导出功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x3-修改Charles-jar"><span class="nav-number">1.4.</span> <span class="nav-text">0x3 修改Charles.jar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x4-测试"><span class="nav-number">1.5.</span> <span class="nav-text">0x4 测试</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guiu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright">
+  <span><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备19032161号-1 </a>
+  </span>
+  <span class="post-meta-divider">|</span>
+
+
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guiu</span>
+
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+<div class="busuanzi-count">
+ <!--修复busuanzi有时候无法显示的问题，这里注释掉，改用本地js-->
+   <!--<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>-->
+  <script async src="/js/cursor/busuanzi_fix.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script async src="https://script-1256884783.file.myqcloud.com/cursor/fireworks.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/live2d-widget@^3.1.3/lib/L2Dwidget.min.js"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

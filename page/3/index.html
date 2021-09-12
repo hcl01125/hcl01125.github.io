@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.1">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -188,6 +188,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/5a058727.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/p/5a058727.html" class="post-title-link" itemprop="url">攻防世界web进阶部分writeup</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-15 00:09:38" itemprop="dateCreated datePublished" datetime="2019-09-15T00:09:38+08:00">2019-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">CTF相关</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1>攻防世界-web进阶-部分writeup</h1>
+<h3 id="Web-php-include"><a class="header-anchor" href="#Web-php-include"></a>Web_php_include</h3>
+<p>首先打开题目：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">echo</span> $_GET[<span class="string">'hello'</span>];</span><br><span class="line">$page=$_GET[<span class="string">'page'</span>];</span><br><span class="line"><span class="keyword">while</span> (strstr($page, <span class="string">"php://"</span>)) &#123;</span><br><span class="line">    $page=str_replace(<span class="string">"php://"</span>, <span class="string">""</span>, $page);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>($page);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>有文件包含，没拿到文件名，而且循环过滤，看起来绕过是不太容易。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/p/5a058727.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/1a4433a1.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -314,10 +392,10 @@
       
           <ol>
 <li>
-<p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://sz.guiu.xyz/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
+<p>拿到题目后先打开看到需要我们输入超过15个字符看看。所以按照提示输入超过15个字符。按下回车后看到直接关闭了。   <img src="http://47.107.37.206/images/2020/02/25/writeup1.png" alt="writeup1.PNG"></p>
 </li>
 <li>
-<p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://sz.guiu.xyz/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p></li></ol>
+<p>然后题目提示Anti_debug，所以应该是一道反调试的题。直接上OD动态调试。<img src="http://47.107.37.206/images/2020/02/25/writeup2.png" alt="writeup2.PNG"></p></li></ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/p/2198b0ee.html#more" rel="contents">
@@ -632,7 +710,7 @@
       
           <h2 id="0x00"><a class="header-anchor" href="#0x00"></a>0x00</h2>
 <p>首先看题目：</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/1555318743005.png" alt="1555318743005.png"></p>
+<p><img src="http://47.107.37.206/images/2020/02/25/1555318743005.png" alt="1555318743005.png"></p>
 <p>没什么卵用的信息，crack.net看上去像是.net的逆向题。</p>
           <!--noindex-->
             <div class="post-button">
@@ -710,7 +788,7 @@
           <ol>
 <li>
 <p>首先打开题目，发现flag乱码，用PEiD查看文件信息，发现是32位控制台程序。</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/writeup12.png" alt="writeup12.PNG"></p></li></ol>
+<p><img src="http://47.107.37.206/images/2020/02/25/writeup12.png" alt="writeup12.PNG"></p></li></ol>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/p/415a8c87.html#more" rel="contents">
@@ -786,7 +864,7 @@
       
           <h2 id="0x00-simple-Maze"><a class="header-anchor" href="#0x00-simple-Maze"></a>0x00 simple_Maze</h2>
 <p>题目如下：</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/1555904702802.png" alt="1555904702802.png"></p>
+<p><img src="http://47.107.37.206/images/2020/02/25/1555904702802.png" alt="1555904702802.png"></p>
 <p>那么为迷宫题了，下载文件为二进制，非exe。</p>
           <!--noindex-->
             <div class="post-button">
@@ -882,7 +960,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -895,7 +973,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -924,7 +1002,7 @@
 
   
   &copy; 2019 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
 
   <span class="with-love">
     <i class="fa fa-user"></i>
@@ -932,7 +1010,7 @@
   <span class="author" itemprop="copyrightHolder">guiu</span>
 
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1

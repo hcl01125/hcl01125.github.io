@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.1">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -30,7 +30,7 @@
 <meta property="og:site_name" content="Hcl的个人小站">
 <meta property="og:description" content="MD5摘要算法  MD5不能称作加密算法，因为不能还原出原本的密码。  MD5算法在逆向中经常遇到，所以了解其背后的原理和加密特征是有必要的，因此专门整理一下。 以下以c语言的其中一种实现为例。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20191030121342096.png">
+<meta property="og:image" content="http://47.107.37.206/images/2020/02/25/image-20191030121342096.png">
 <meta property="article:published_time" content="2019-10-31T03:05:13.000Z">
 <meta property="article:modified_time" content="2019-10-31T03:05:13.000Z">
 <meta property="article:author" content="guiu">
@@ -38,7 +38,7 @@
 <meta property="article:tag" content="逆向">
 <meta property="article:tag" content="MD5">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://sz.guiu.xyz/images/2020/02/25/image-20191030121342096.png">
+<meta name="twitter:image" content="http://47.107.37.206/images/2020/02/25/image-20191030121342096.png">
 
 <link rel="canonical" href="http://guiu.xyz/p/16e870e.html">
 
@@ -283,7 +283,7 @@
 <li>第五步：输出。最后得到的ABCD为输出结果，共128bit。A为低位，D为高位。</li>
 </ul>
 <p>总体流程如下图所示，表示第i个分组，每次的运算都由前一轮的128位结果值和第i块512bit值进行运算。初始的128位值为初始链接变量，这些参数用于第一轮的运算，以大端字节序来表示，他们分别为：<code>A=0x01234567</code>，<code>B=0x89ABCDEF</code>，<code>C=0xFEDCBA98</code>，<code>D=0x76543210</code>。</p>
-<p><img src="http://sz.guiu.xyz/images/2020/02/25/image-20191030121342096.png" alt="image-20191030121342096.png"></p>
+<p><img src="http://47.107.37.206/images/2020/02/25/image-20191030121342096.png" alt="image-20191030121342096.png"></p>
 </blockquote>
 <hr>
 <h2 id="code"><a class="header-anchor" href="#code"></a>code</h2>
@@ -424,7 +424,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">MD5摘要算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code"><span class="nav-number">1.2.</span> <span class="nav-text">code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">1.3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向分析"><span class="nav-number">1.4.</span> <span class="nav-text">逆向分析</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text">MD5摘要算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code"><span class="nav-number">1.2.</span> <span class="nav-text">code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">1.3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向分析"><span class="nav-number">1.4.</span> <span class="nav-text">逆向分析</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -440,7 +440,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -453,7 +453,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -482,7 +482,7 @@
 
   
   &copy; 2019 – 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
 
   <span class="with-love">
     <i class="fa fa-user"></i>
@@ -490,7 +490,7 @@
   <span class="author" itemprop="copyrightHolder">guiu</span>
 
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.1
   </div>
   <span class="post-meta-divider">|</span>
   <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
