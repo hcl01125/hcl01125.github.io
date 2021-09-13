@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ctypes学习笔记三		——断点 捕获调试事件 前面实现了获取CPU寄存器状态的方法，接下来可以继续对进程调试事件进行处理。 首先进入进程，然后等待并获取调试事件，用到的API如下： 1234BOOL WaitForDebugEvent(  LPDEBUG_EVENT lpDebugEvent,  DWORD         dwMilliseconds); 这个函数一般是调试器主循环的组成部分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctypes学习笔记三——断点">
+<meta property="og:url" content="http://guiu.xyz/p/780073ef.html">
+<meta property="og:site_name" content="Hcl的个人小站">
+<meta property="og:description" content="ctypes学习笔记三		——断点 捕获调试事件 前面实现了获取CPU寄存器状态的方法，接下来可以继续对进程调试事件进行处理。 首先进入进程，然后等待并获取调试事件，用到的API如下： 1234BOOL WaitForDebugEvent(  LPDEBUG_EVENT lpDebugEvent,  DWORD         dwMilliseconds); 这个函数一般是调试器主循环的组成部分">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-09T13:30:11.000Z">
+<meta property="article:modified_time" content="2020-01-09T13:30:11.000Z">
+<meta property="article:author" content="guiu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="调试器">
+<meta property="article:tag" content="ctypes">
+<meta property="article:tag" content="学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://guiu.xyz/p/780073ef.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>ctypes学习笔记三——断点 | Hcl的个人小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hcl的个人小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hcl01125" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/780073ef.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ctypes学习笔记三——断点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-09 21:30:11" itemprop="dateCreated datePublished" datetime="2020-01-09T21:30:11+08:00">2020-01-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1>ctypes学习笔记三		——断点</h1>
+<h2 id="捕获调试事件"><a class="header-anchor" href="#捕获调试事件"></a>捕获调试事件</h2>
+<p>前面实现了获取CPU寄存器状态的方法，接下来可以继续对进程调试事件进行处理。</p>
+<p>首先进入进程，然后等待并获取调试事件，用到的API如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">WaitForDebugEvent</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPDEBUG_EVENT lpDebugEvent,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD         dwMilliseconds</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>这个函数一般是调试器主循环的组成部分。</strong></p>
+<p>调试事件信息定义在一个结构体里面：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">DEBUG_EVENT</span> &#123;</span> </span><br><span class="line">    DWORD dwDebugEventCode; </span><br><span class="line">    DWORD dwProcessId; </span><br><span class="line">    DWORD dwThreadId;</span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        EXCEPTION_DEBUG_INFO Exception; </span><br><span class="line">        CREATE_THREAD_DEBUG_INFO CreateThread; </span><br><span class="line">        CREATE_PROCESS_DEBUG_INFO CreateProcessInfo; </span><br><span class="line">        EXIT_THREAD_DEBUG_INFO ExitThread; </span><br><span class="line">        EXIT_PROCESS_DEBUG_INFO ExitProcess; </span><br><span class="line">        LOAD_DLL_DEBUG_INFO LoadDll;</span><br><span class="line">        UNLOAD_DLL_DEBUG_INFO UnloadDll; </span><br><span class="line">        OUTPUT_DEBUG_STRING_INFO DebugString; </span><br><span class="line">        RIP_INFO RipInfo;</span><br><span class="line">    &#125;u;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中，<code>dwDebugEventCode</code>值反映了被捕获的事件类型。</p>
+<a id="more"></a>
+<p><code>dwDebugEventCode</code>值的定义如下:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Value</th>
+<th style="text-align:center">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>CREATE_PROCESS_DEBUG_EVENT</strong><br>3</td>
+<td style="text-align:center">报告创建过程调试事件。<strong>u.CreateProcessInfo</strong>的值指定一个<a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-create_process_debug_info" target="_blank" rel="noopener">CREATE_PROCESS_DEBUG_INFO</a> 结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>CREATE_THREAD_DEBUG_EVENT</strong><br>2</td>
+<td style="text-align:center">报告创建线程调试事件。<strong>u.CreateThread</strong>的值指定<a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-create_thread_debug_info" target="_blank" rel="noopener">CREATE_THREAD_DEBUG_INFO</a> 结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>EXCEPTION_DEBUG_EVENT</strong><br>1</td>
+<td style="text-align:center">报告异常调试事件。<strong>u.Exception</strong>的值指定 <a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-exception_debug_info" target="_blank" rel="noopener">EXCEPTION_DEBUG_INFO</a>结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>EXIT_PROCESS_DEBUG_EVENT</strong><br>5</td>
+<td style="text-align:center">报告退出进程调试事件。<strong>u.ExitProcess</strong>的值指定一个<a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-exit_process_debug_info" target="_blank" rel="noopener">EXIT_PROCESS_DEBUG_INFO</a> 结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>EXIT_THREAD_DEBUG_EVENT</strong><br>4</td>
+<td style="text-align:center">报告退出线程调试事件。<strong>u.ExitThread</strong>的值指定一个 <a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-exit_thread_debug_info" target="_blank" rel="noopener">EXIT_THREAD_DEBUG_INFO</a>结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>LOAD_DLL_DEBUG_EVENT</strong><br>6</td>
+<td style="text-align:center">报告加载动态链接库（DLL）调试事件。<strong>u.LoadDll</strong>的值 指定 <a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-load_dll_debug_info" target="_blank" rel="noopener">LOAD_DLL_DEBUG_INFO</a>结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>OUTPUT_DEBUG_STRING_EVENT</strong><br>8</td>
+<td style="text-align:center">报告输出调试字符串调试事件。<strong>u.DebugString</strong>的值 指定<a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-output_debug_string_info" target="_blank" rel="noopener">OUTPUT_DEBUG_STRING_INFO</a> 结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>RIP_EVENT</strong><br>9</td>
+<td style="text-align:center">报告RIP调试事件（系统调试错误）。<strong>u.RipInfo</strong>的值 指定<a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-rip_info" target="_blank" rel="noopener">RIP_INFO</a>结构。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>UNLOAD_DLL_DEBUG_EVENT</strong><br>7</td>
+<td style="text-align:center">报告一个卸载DLL调试事件。<strong>u.UnloadDll</strong>的值指定一个 <a href="https://docs.microsoft.com/windows/desktop/api/minwinbase/ns-minwinbase-unload_dll_debug_info" target="_blank" rel="noopener">UNLOAD_DLL_DEBUG_INFO</a>结构。</td>
+</tr>
+</tbody>
+</table>
+<p>通过上面的事件代码，我们就可以获取被调试进程的运行过程、当前发生的事件信息，方便后续的调试工作。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">ContinueDebugEvent</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwProcessId,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwThreadId,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD dwContinueStatus</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>ContinueDebugEvent()</code>函数使得被调试事件中断的线程继续运行，直到捕获下一个调试事件。</p>
+<p>其中，<code>dwContinueStatus</code>参数指定了下一次调试事件发生时的报告选项。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Value</th>
+<th style="text-align:center">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>DBG_CONTINUE</strong><br>0x00010002L</td>
+<td style="text-align:center">如果<code>dwThreadId</code>参数指定的线程先前报告了<code>EXCEPTION_DEBUG_EVENT</code>调试事件，则该函数将停止所有异常处理并继续执行该线程，并将异常标记为已处理。对于任何其他调试事件，此标志仅继续执行线程。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>DBG_EXCEPTION_NOT_HANDLED</strong><br>0x80010001L</td>
+<td style="text-align:center">如果<code>dwThreadId</code>指定的线程先前报告了<code>EXCEPTION_DEBUG_EVENT</code>调试事件，则该函数将继续异常处理。如果这是第一次命中异常事件，则使用结构化异常处理程序的搜索和调度逻辑；否则，该过程终止。对于任何其他调试事件，此标志仅继续执行线程。</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>DBG_REPLY_LATER</strong><br>0x40010001L</td>
+<td style="text-align:center">在Windows 10版本1507或更高版本中受支持，此标志使<code>dwThreadId</code>在目标继续后重播现有的Breaking事件。通过针对<code>dwThreadId</code>调用<a href="https://docs.microsoft.com/windows/desktop/api/processthreadsapi/nf-processthreadsapi-suspendthread" target="_blank" rel="noopener">SuspendThread</a> API ，调试器可以恢复进程中的其他线程，然后返回中断。</td>
+</tr>
+</tbody>
+</table>
+<p>下面是一个附加进程后打印调试事件的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">pid = input(<span class="string">"Enter the PID of the process to attach to:"</span>)</span><br><span class="line"></span><br><span class="line">debugger.attach(int(pid))	<span class="comment"># attach the process</span></span><br><span class="line">debugger.run()</span><br><span class="line">debugger.detach()</span><br></pre></td></tr></table></figure>
+<p>调用API的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># Now we have to poll the debuggee for </span></span><br><span class="line">    <span class="comment"># debugging events           </span></span><br><span class="line">    <span class="keyword">while</span> self.debugger_active == <span class="literal">True</span>:</span><br><span class="line">        self.get_debug_event() </span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_debug_event</span><span class="params">(self)</span>:</span></span><br><span class="line">        </span><br><span class="line">    debug_event    = DEBUG_EVENT()</span><br><span class="line">    continue_status = DBG_CONTINUE</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> kernel32.WaitForDebugEvent(byref(debug_event),<span class="number">100</span>):</span><br><span class="line">        <span class="comment"># grab various information with regards to the current exception.</span></span><br><span class="line">        self.h_thread          = self.open_thread(debug_event.dwThreadId)</span><br><span class="line">        self.context           = self.get_thread_context(h_thread=self.h_thread)</span><br><span class="line">        self.debug_event       = debug_event</span><br><span class="line">        </span><br><span class="line">                   </span><br><span class="line">        print(<span class="string">"Event Code: %d Thread ID: %d"</span> % \</span><br><span class="line">            (debug_event.dwDebugEventCode,debug_event.dwThreadId))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> debug_event.dwDebugEventCode == EXCEPTION_DEBUG_EVENT:</span><br><span class="line">            self.exception = debug_event.u.Exception.ExceptionRecord.ExceptionCode</span><br><span class="line">            self.exception_address = debug_event.u.Exception.ExceptionRecord.ExceptionAddress</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># call the internal handler for the exception event that just occured.</span></span><br><span class="line">            <span class="keyword">if</span> self.exception == EXCEPTION_ACCESS_VIOLATION:</span><br><span class="line">                print(<span class="string">"Access Violation Detected."</span>)</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_BREAKPOINT:</span><br><span class="line">                continue_status = self.exception_handler_breakpoint()</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_GUARD_PAGE:</span><br><span class="line">                print(<span class="string">"Guard Page Access Detected."</span>)</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_SINGLE_STEP:</span><br><span class="line">                self.exception_handler_single_step()</span><br><span class="line">            </span><br><span class="line">        kernel32.ContinueDebugEvent(debug_event.dwProcessId, debug_event.dwThreadId, continue_status)</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Enter the PID of the <span class="keyword">process</span> to attach to:<span class="number">18248</span></span><br><span class="line">Event Code: <span class="number">3</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">18492</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">22368</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">21472</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">20692</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">13260</span></span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">13260</span></span><br><span class="line">[*] Inside the breakpoint handler.</span><br><span class="line">[*] Exception address: <span class="number">0</span>x77943f80</span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">13260</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">18492</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">22368</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">21472</span></span><br></pre></td></tr></table></figure>
+<p>值得注意的是其中的<code>EXCEPTION_DEBUG_EVENT (0x1)</code>例外事件，它由 windows 设置的断点所引发，允许在 进程启动前观察进程的状态。</p>
+<p>最后的几个事件是<code>EXIT_THREAD_DEBUG_EVENT (0x4)</code>，它是当<code>detach()</code>函数被调用时，进程结束自身产生。</p>
+<hr>
+<h2 id="断点"><a class="header-anchor" href="#断点"></a>断点</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">断点类型</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">软件断点</td>
+<td style="text-align:center">是用的最多的断点类型，软件断点的本质是利用一个单字节指令（<code>INT3 中断事件</code>），<br>用于暂停被调试的程序，然后将控制权转义给调试器的断点处理函数。<br>    软件断点会改变程序运行的内存数据，同时也改变了软件的<code>CRC</code>校验和。<br>因此当被调试软件会检验CRC校验和的时候，调试行为只能用硬件断点实现。</td>
+</tr>
+<tr>
+<td style="text-align:center">硬件断点</td>
+<td style="text-align:center">硬件断点是CPU级别的断点，用到了特定的寄存器：调试寄存器。<br>调试器被专门用于调试事件，一个CPU一般会有8个调试寄存器。硬件断点一般被用于：<br>1. 当特定的地址上有指令执行的时候中断<br>2. 当特定的地址上有数据可以写入的时候<br>3. 当特定的地址上有数据读或者写但不执行的时候</td>
+</tr>
+<tr>
+<td style="text-align:center">内存断点</td>
+<td style="text-align:center">内存断点通过改变内存页面的访问权限，然后通过跟踪被保护页的访问异常，<br>进一步确定程序对内存的访问行为，进而确认程序对数据的操作。<br>    内存断点可以监控内存中数据的变化。</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://www.kancloud.cn/wizardforcel/grey-hat-python/125757" target="_blank" rel="noopener">详细介绍在这里</a></p>
+<p>以下分别对以上三种断点进行处理：</p>
+<hr>
+<h4 id="软件断点："><a class="header-anchor" href="#软件断点："></a>软件断点：</h4>
+<p>需要用到两个函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">ReadProcessMemory</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HANDLE  hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCVOID lpBaseAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPVOID  lpBuffer,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T  nSize,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T  *lpNumberOfBytesRead</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">WriteProcessMemory</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HANDLE  hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPVOID  lpBaseAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCVOID lpBuffer,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T  nSize,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T  *lpNumberOfBytesWritten</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这两个函数可以读取或修改被调试进程的内存，参数定义如下：</p>
+<p><code>hProcess</code>具有正在读取的内存的进程的句柄。句柄必须具有对进程的<code>PROCESS_VM_READ</code>访问权限。</p>
+<p><code>lpBaseAddress</code>指向要从中读取的指定进程中的基地址的指针。在进行任何数据传输之前，系统会验证基址和指定大小的内存中的所有数据都可以访问以进行读取访问，如果无法访问，则该功能将失败。</p>
+<p><code>lpBuffer</code>指向缓冲区的指针，该缓冲区从指定进程的地址空间接收内容。</p>
+<p><code>nSize</code>从指定进程中读取的字节数。</p>
+<p><code>lpNumberOfBytesRead</code>指向变量的指针，该变量接收传输到指定缓冲区的字节数。如果<code>lpNumberOfBytesRead</code>为<code>NULL</code>，则忽略该参数。</p>
+<p>以下以调试<code>printf()</code>函数为例：</p>
+<p>首先需要确定一个函数的虚地址，这里用到了<code>GetProcAddress()</code>这个API：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">FARPROC <span class="title">GetProcAddress</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HMODULE hModule,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR  lpProcName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>参数<code>hMoudle</code>为包函数或变量（待调试函数）的模块的句柄。</p>
+<p>这个句柄可以通过<code>GetModuleHandle()</code>获取。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HMODULE <span class="title">GetModuleHandleA</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCSTR lpModuleName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><strong>这里有一个坑：</strong></p>
+<p>MSDN官方文档中有这么一句话：</p>
+<blockquote>
+<p>检索指定模块的模块句柄。该模块必须已由调用进程加载。</p>
+<p>为避免在“备注”部分中描述的竞争条件，请使用 <a href="https://docs.microsoft.com/windows/desktop/api/libloaderapi/nf-libloaderapi-getmodulehandleexa" target="_blank" rel="noopener">GetModuleHandleEx</a>函数。</p>
+<p>返回的句柄不是全局的或可继承的。它不能被其他进程复制或使用。</p>
+</blockquote>
+<p>就是说待获取的模块必须是已经被进程加载的模块（好像是句废话233333），重点是后面，**返回的句柄不能被其余进程复制或使用。**即是说当前调试的句柄只在当前有效。</p>
+<p>ok，准备就绪，下面贴软件断点调试需要用到的调用代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取目标地址的数据</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_process_memory</span><span class="params">(self,address,length)</span>:</span></span><br><span class="line">        </span><br><span class="line">    data         = <span class="string">b""</span></span><br><span class="line">    read_buf     = create_string_buffer(length)</span><br><span class="line">    count        = c_ulong(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># kernel32.ReadProcessMemory(self.h_process, address, read_buf, 5, byref(count))</span></span><br><span class="line">    <span class="comment"># data    = read_buf.raw</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># return data</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> kernel32.ReadProcessMemory(self.h_process, address, read_buf, length, byref(count)):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        data += read_buf.raw</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 向对应地址写入数据    </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_process_memory</span><span class="params">(self,address,data)</span>:</span></span><br><span class="line">    </span><br><span class="line">    count  = c_ulong(<span class="number">0</span>)</span><br><span class="line">    length = len(data)</span><br><span class="line">    </span><br><span class="line">    c_data = c_char_p(data[count.value:])</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> kernel32.WriteProcessMemory(self.h_process, address, c_data, length, byref(count)):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置断点</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bp_set</span><span class="params">(self,address)</span>:</span></span><br><span class="line">    print(<span class="string">"[*] Setting breakpoint at: 0x%08x"</span> % address)</span><br><span class="line">    <span class="comment"># 原先的has_key()方法在python3中被移除了</span></span><br><span class="line">    <span class="comment">#首先判断该地址是否在断点列表中</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> (address <span class="keyword">in</span> self.breakpoints):</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 读取并保存该断点地址的原数据</span></span><br><span class="line">        old_protect = c_ulong(<span class="number">0</span>)</span><br><span class="line">        kernel32.VirtualProtectEx(self.h_process, address, <span class="number">1</span>, PAGE_EXECUTE_READWRITE, byref(old_protect))</span><br><span class="line">        </span><br><span class="line">        original_byte = self.read_process_memory(address, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> original_byte != <span class="literal">False</span>:</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># write the INT3 opcode</span></span><br><span class="line">            <span class="keyword">if</span> self.write_process_memory(address, <span class="string">b"\xCC"</span>):     <span class="comment"># 这里也是bytes</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># register the breakpoint in our internal list</span></span><br><span class="line">                self.breakpoints[address] = (original_byte)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取函数在模块中的地址</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func_resolve</span><span class="params">(self,dll,function)</span>:</span></span><br><span class="line">        </span><br><span class="line">    handle  = kernel32.GetModuleHandleA(dll)</span><br><span class="line">    address = kernel32.GetProcAddress(handle, function)</span><br><span class="line">    </span><br><span class="line">    kernel32.CloseHandle(handle)</span><br><span class="line">    <span class="keyword">return</span> address</span><br></pre></td></tr></table></figure>
+<p>软件断点调试<code>printf()</code>函数的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_test.py</span></span><br><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">pid = input(<span class="string">"Enter the PID of the process to attach to:"</span>)</span><br><span class="line">debugger.attach(int(pid))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里还是要使用bytes传参。</span></span><br><span class="line">printf_address = debugger.func_resolve(<span class="string">b"msvcrt.dll"</span>, <span class="string">b"printf"</span>)</span><br><span class="line">print(<span class="string">"[*] Address of printf: 0x%08x"</span> % printf_address)</span><br><span class="line"></span><br><span class="line">debugger.bp_set(printf_address)</span><br><span class="line"></span><br><span class="line">debugger.run()</span><br><span class="line"><span class="comment"># debugger.detach()</span></span><br><span class="line"><span class="comment"># input("")</span></span><br></pre></td></tr></table></figure>
+<p>运行<code>printf_loop.py</code>，并查找到该进程的<code>PID</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># printf_loop.py</span></span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">msvcrt = cdll.msvcrt</span><br><span class="line">counter = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">    msvcrt.printf(<span class="string">b"Loop iteration %d\n"</span> % counter)</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    counter += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>软件断点调试的流程如下：</p>
+<p>首先通过<code>func_resolve()</code>函数在<strong>被附加调试的进程的模块中</strong>找到<code>printf()</code>函数的虚拟地址，然后<code>bp_set()</code>函数下断点，<code>run()</code>函数监听调试事件。</p>
+<p>下断点的过程如下：</p>
+<p>首先读取目标地址的原数据并保存，然后向目标地址写入<code>INT3</code>断点指令，并等待调试事件发生即可。</p>
+<p>命中断点之后，将之前保存的原数据写回，并将<code>EIP</code>寄存器值-1，使程序正常执行。</p>
+<p>调试效果：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Enter the PID of the <span class="keyword">process</span> to attach to:<span class="number">2348</span></span><br><span class="line">[*] Address of printf: <span class="number">0</span>x765a4f70</span><br><span class="line">[*] Setting breakpoint at: <span class="number">0</span>x765a4f70</span><br><span class="line">Event Code: <span class="number">3</span> Thread ID: <span class="number">18548</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">18548</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">25680</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">2636</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">20208</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">18548</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">18548</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">7376</span></span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">18548</span></span><br><span class="line">[*] Exception address: <span class="number">0</span>x765a4f70</span><br><span class="line">[*] Hit user defined breakpoint.</span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">7376</span></span><br><span class="line">[*] Exception address: <span class="number">0</span>x77943f80</span><br><span class="line">[*] Hit the first breakpoint.</span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">7376</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">20208</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="硬件断点"><a class="header-anchor" href="#硬件断点"></a>硬件断点</h3>
+<p>硬件断点使用专门的CPU调试寄存器实现，这里务必要记住的是：</p>
+<p>当我们使用硬件断点的时候，要跟踪四个可用的调试寄存器哪个是可用的哪个已经被使用了。必须确保我们使用的那个寄存器是空的，否则硬件断点就不能在我们希望的地方触发。</p>
+<p>硬件断点流程如下：</p>
+<p>首先枚举进程中的所有线程，然后获取其CPU寄存器值，并定义调试寄存器<code>DR0</code>-<code>DR3</code>的值，写入断点地址，然后更新<code>DR7</code>标志位，开启硬件断点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bp_set_hw</span><span class="params">(self, address, length, condition)</span>:</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># Check for a valid length value</span></span><br><span class="line">    <span class="keyword">if</span> length <span class="keyword">not</span> <span class="keyword">in</span> (<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        length -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># Check for a valid condition</span></span><br><span class="line">    <span class="keyword">if</span> condition <span class="keyword">not</span> <span class="keyword">in</span> (HW_ACCESS, HW_EXECUTE, HW_WRITE):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Check for available slots</span></span><br><span class="line">    <span class="keyword">if</span> <span class="number">0</span> <span class="keyword">not</span> <span class="keyword">in</span> self.hardware_breakpoints:</span><br><span class="line">        available = <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="number">1</span> <span class="keyword">not</span> <span class="keyword">in</span> self.hardware_breakpoints:</span><br><span class="line">        available = <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="number">2</span> <span class="keyword">not</span> <span class="keyword">in</span> self.hardware_breakpoints:</span><br><span class="line">        available = <span class="number">2</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="number">3</span> <span class="keyword">not</span> <span class="keyword">in</span> self.hardware_breakpoints:</span><br><span class="line">        available = <span class="number">3</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment"># We want to set the debug register in every thread</span></span><br><span class="line">    <span class="keyword">for</span> thread_id <span class="keyword">in</span> self.enumerate_threads():</span><br><span class="line">        context = self.get_thread_context(thread_id=thread_id)</span><br><span class="line">        <span class="comment"># Enable the appropriate flag in the DR7</span></span><br><span class="line">        <span class="comment"># register to set the breakpoint</span></span><br><span class="line">        context.Dr7 |= <span class="number">1</span> &lt;&lt; (available * <span class="number">2</span>)</span><br><span class="line">        <span class="comment"># Save the address of the breakpoint in the</span></span><br><span class="line">        <span class="comment"># free register that we found</span></span><br><span class="line">        <span class="keyword">if</span> available == <span class="number">0</span>:</span><br><span class="line">            context.Dr0 = address</span><br><span class="line">        <span class="keyword">elif</span> available == <span class="number">1</span>:</span><br><span class="line">            context.Dr1 = address</span><br><span class="line">        <span class="keyword">elif</span> available == <span class="number">2</span>:</span><br><span class="line">            context.Dr2 = address</span><br><span class="line">        <span class="keyword">elif</span> available == <span class="number">3</span>:</span><br><span class="line">            context.Dr3 = address</span><br><span class="line">        <span class="comment"># Set the breakpoint condition</span></span><br><span class="line">        context.Dr7 |= condition &lt;&lt; ((available * <span class="number">4</span>) + <span class="number">16</span>)</span><br><span class="line">        <span class="comment"># Set the length</span></span><br><span class="line">        context.Dr7 |= length &lt;&lt; ((available * <span class="number">4</span>) + <span class="number">18</span>)</span><br><span class="line">        <span class="comment"># Set this threads context with the debug registers</span></span><br><span class="line">        <span class="comment"># set</span></span><br><span class="line">        h_thread = self.open_thread(thread_id)</span><br><span class="line">        kernel32.SetThreadContext(h_thread,byref(context))</span><br><span class="line">    <span class="comment"># update the internal hardware breakpoint array at the used slot index.</span></span><br><span class="line">    self.hardware_breakpoints[available] = (address,length,condition)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exception_handler_single_step</span><span class="params">(self)</span>:</span></span><br><span class="line">    print(<span class="string">"[*] Exception address: 0x%08x"</span> % self.exception_address)</span><br><span class="line">    <span class="comment"># Comment from PyDbg:</span></span><br><span class="line">    <span class="comment"># determine if this single step event occured in reaction to a hardware breakpoint and grab the hit breakpoint.</span></span><br><span class="line">    <span class="comment"># according to the Intel docs, we should be able to check for the BS flag in Dr6. but it appears that windows</span></span><br><span class="line">    <span class="comment"># isn't properly propogating that flag down to us.</span></span><br><span class="line">    <span class="keyword">if</span> self.context.Dr6 &amp; <span class="number">0x1</span> <span class="keyword">and</span> (<span class="number">0</span> <span class="keyword">in</span> self.hardware_breakpoints):</span><br><span class="line">        slot = <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> self.context.Dr6 &amp; <span class="number">0x2</span> <span class="keyword">and</span> (<span class="number">1</span> <span class="keyword">in</span> self.hardware_breakpoints):</span><br><span class="line">        slot = <span class="number">1</span></span><br><span class="line">    <span class="keyword">elif</span> self.context.Dr6 &amp; <span class="number">0x4</span> <span class="keyword">and</span> (<span class="number">2</span> <span class="keyword">in</span> self.hardware_breakpoints):</span><br><span class="line">        slot = <span class="number">2</span></span><br><span class="line">    <span class="keyword">elif</span> self.context.Dr6 &amp; <span class="number">0x8</span> <span class="keyword">and</span> (<span class="number">3</span> <span class="keyword">in</span> self.hardware_breakpoints):</span><br><span class="line">        slot = <span class="number">3</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># This wasn't an INT1 generated by a hw breakpoint</span></span><br><span class="line">        continue_status = DBG_EXCEPTION_NOT_HANDLED</span><br><span class="line">    <span class="comment"># Now let's remove the breakpoint from the list</span></span><br><span class="line">    <span class="keyword">if</span> self.bp_del_hw(slot):</span><br><span class="line">        continue_status = DBG_CONTINUE</span><br><span class="line">    print(<span class="string">"[*] Hardware breakpoint removed."</span>)</span><br><span class="line">    <span class="keyword">return</span> continue_status</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bp_del_hw</span><span class="params">(self,slot)</span>:</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># Disable the breakpoint for all active threads</span></span><br><span class="line">    <span class="keyword">for</span> thread_id <span class="keyword">in</span> self.enumerate_threads():</span><br><span class="line">        context = self.get_thread_context(thread_id=thread_id)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Reset the flags to remove the breakpoint</span></span><br><span class="line">        context.Dr7 &amp;= ~(<span class="number">1</span> &lt;&lt; (slot * <span class="number">2</span>))</span><br><span class="line">        <span class="comment"># Zero out the address</span></span><br><span class="line">        <span class="keyword">if</span>   slot == <span class="number">0</span>: </span><br><span class="line">            context.Dr0 = <span class="number">0x00000000</span></span><br><span class="line">        <span class="keyword">elif</span> slot == <span class="number">1</span>: </span><br><span class="line">            context.Dr1 = <span class="number">0x00000000</span></span><br><span class="line">        <span class="keyword">elif</span> slot == <span class="number">2</span>: </span><br><span class="line">            context.Dr2 = <span class="number">0x00000000</span></span><br><span class="line">        <span class="keyword">elif</span> slot == <span class="number">3</span>: </span><br><span class="line">            context.Dr3 = <span class="number">0x00000000</span></span><br><span class="line">        <span class="comment"># Remove the condition flag</span></span><br><span class="line">        context.Dr7 &amp;= ~(<span class="number">3</span> &lt;&lt; ((slot * <span class="number">4</span>) + <span class="number">16</span>))</span><br><span class="line">        <span class="comment"># Remove the length flag</span></span><br><span class="line">        context.Dr7 &amp;= ~(<span class="number">3</span> &lt;&lt; ((slot * <span class="number">4</span>) + <span class="number">18</span>))</span><br><span class="line">        <span class="comment"># Reset the thread's context with the breakpoint removed</span></span><br><span class="line">        h_thread = self.open_thread(thread_id)</span><br><span class="line">        kernel32.SetThreadContext(h_thread,byref(context))</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># remove the breakpoint from the internal list.</span></span><br><span class="line">    <span class="keyword">del</span> self.hardware_breakpoints[slot]</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_test.py</span></span><br><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"><span class="keyword">from</span> my_debugger_defines <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">pid = input(<span class="string">"Enter the PID of the process to attach to:"</span>)</span><br><span class="line">debugger.attach(int(pid))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里还是要使用bytes传参。</span></span><br><span class="line">printf_address = debugger.func_resolve(<span class="string">b"msvcrt.dll"</span>, <span class="string">b"printf"</span>)</span><br><span class="line">print(<span class="string">"[*] Address of printf: 0x%08x"</span> % printf_address)</span><br><span class="line"></span><br><span class="line">debugger.bp_set_hw(printf_address,<span class="number">1</span>,HW_EXECUTE)</span><br><span class="line"></span><br><span class="line">debugger.run()</span><br><span class="line"><span class="comment"># debugger.detach()</span></span><br><span class="line"><span class="comment"># input("")</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Enter the PID of the <span class="keyword">process</span> to attach to:<span class="number">6192</span></span><br><span class="line">[*] Address of printf: <span class="number">0</span>x765a4f70</span><br><span class="line">Event Code: <span class="number">3</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">20596</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">3520</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">24228</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">24232</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">22640</span></span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">24232</span></span><br><span class="line">[*] Exception address: <span class="number">0</span>x765a4f70</span><br><span class="line">[*] Hardware breakpoint removed.</span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">22640</span></span><br><span class="line">[*] Exception address: <span class="number">0</span>x77943f80</span><br><span class="line">[*] Hit the first breakpoint.</span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">22640</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">20596</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">3520</span></span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">24228</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="内存断点"><a class="header-anchor" href="#内存断点"></a>内存断点</h3>
+<p>内存断点设置流程如下：</p>
+<p>首先查询一个内存块以并找到基地址（页面在虚拟内存中的起始地址）。一旦确定了页面大小，接着就设置页面权限，使其成为保护<code>（guard）</code>页。当CPU尝试访问这块内存时，就会抛出一个<code>GUARD_PAGE_EXCEPTION</code>异常。我们用对应的异常处理函数，将页面权限恢复到以前，最后让程序继续执行。</p>
+<p>首先需要获取操作系统的内存页默认大小：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetSystemInfo</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  LPSYSTEM_INFO lpSystemInfo</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">SYSTEM_INFO</span> &#123;</span></span><br><span class="line">  <span class="keyword">union</span> &#123;</span><br><span class="line">    DWORD dwOemId;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">      WORD wProcessorArchitecture;</span><br><span class="line">      WORD wReserved;</span><br><span class="line">    &#125; DUMMYSTRUCTNAME;</span><br><span class="line">  &#125; DUMMYUNIONNAME;</span><br><span class="line">  DWORD     dwPageSize;</span><br><span class="line">  LPVOID    lpMinimumApplicationAddress;</span><br><span class="line">  LPVOID    lpMaximumApplicationAddress;</span><br><span class="line">  DWORD_PTR dwActiveProcessorMask;</span><br><span class="line">  DWORD     dwNumberOfProcessors;</span><br><span class="line">  DWORD     dwProcessorType;</span><br><span class="line">  DWORD     dwAllocationGranularity;</span><br><span class="line">  WORD      wProcessorLevel;</span><br><span class="line">  WORD      wProcessorRevision;</span><br><span class="line">&#125; SYSTEM_INFO, *LPSYSTEM_INFO;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info" target="_blank" rel="noopener">具体文档在这里</a></p>
+<p>获取默认页面大小之后，接下来使用<code>VirtualQueryEx()</code>函数查询对应页面信息：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SIZE_T <span class="title">VirtualQueryEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HANDLE                    hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPCVOID                   lpAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">  PMEMORY_BASIC_INFORMATION lpBuffer,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T                    dwLength</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">MEMORY_BASIC_INFORMATION</span> &#123;</span></span><br><span class="line">  PVOID  BaseAddress;</span><br><span class="line">  PVOID  AllocationBase;</span><br><span class="line">  DWORD  AllocationProtect;</span><br><span class="line">  SIZE_T RegionSize;</span><br><span class="line">  DWORD  State;</span><br><span class="line">  DWORD  Protect;</span><br><span class="line">  DWORD  Type;</span><br><span class="line">&#125; MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information" target="_blank" rel="noopener">具体文档在这里</a></p>
+<p>其中<code>BaseAddress</code>参数的值就是我们目标页的开始地址，使用<code>VirtualProtectEx()</code>函数对这个地址设置保护权限即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">VirtualProtectEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  HANDLE hProcess,</span></span></span><br><span class="line"><span class="function"><span class="params">  LPVOID lpAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">  SIZE_T dwSize,</span></span></span><br><span class="line"><span class="function"><span class="params">  DWORD  flNewProtect,</span></span></span><br><span class="line"><span class="function"><span class="params">  PDWORD lpflOldProtect</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>Debugger</code>实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bp_set_mem</span> <span class="params">(self, address, size)</span>:</span></span><br><span class="line">        </span><br><span class="line">    mbi = MEMORY_BASIC_INFORMATION()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Attempt to discover the base address of the memory page</span></span><br><span class="line">    <span class="keyword">if</span> kernel32.VirtualQueryEx(self.h_process, address, byref(mbi), sizeof(mbi)) &lt; sizeof(mbi):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    current_page = mbi.BaseAddress</span><br><span class="line"></span><br><span class="line">    <span class="comment"># We will set the permissions on all pages that are</span></span><br><span class="line">    <span class="comment"># affected by our memory breakpoint.</span></span><br><span class="line">    <span class="keyword">while</span> current_page &lt;= address + size:</span><br><span class="line">    </span><br><span class="line">        <span class="comment"># Add the page to the list, this will</span></span><br><span class="line">        <span class="comment"># differentiate our guarded pages from those</span></span><br><span class="line">        <span class="comment"># that were set by the OS or the debuggee process</span></span><br><span class="line">        self.guarded_pages.append(current_page)</span><br><span class="line">        </span><br><span class="line">        old_protection = c_ulong(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> kernel32.VirtualProtectEx(self.h_process, current_page, size, mbi.Protect | PAGE_GUARD, byref(old_protection)):</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">     </span><br><span class="line">        <span class="comment"># Increase our range by the size of the</span></span><br><span class="line">        <span class="comment"># default system memory page size</span></span><br><span class="line">        current_page += self.page_size</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Add the memory breakpoint to our global list</span></span><br><span class="line">    self.memory_breakpoints[address] = (address, size, mbi)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_debug_event</span><span class="params">(self)</span>:</span></span><br><span class="line">        </span><br><span class="line">    debug_event    = DEBUG_EVENT()</span><br><span class="line">    continue_status = DBG_CONTINUE</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> kernel32.WaitForDebugEvent(byref(debug_event),<span class="number">100</span>):</span><br><span class="line">        <span class="comment"># grab various information with regards to the current exception.</span></span><br><span class="line">        self.h_thread          = self.open_thread(debug_event.dwThreadId)</span><br><span class="line">        self.context           = self.get_thread_context(h_thread=self.h_thread)</span><br><span class="line">        self.debug_event       = debug_event</span><br><span class="line">        </span><br><span class="line">                   </span><br><span class="line">        print(<span class="string">"Event Code: %d Thread ID: %d"</span> % \</span><br><span class="line">            (debug_event.dwDebugEventCode,debug_event.dwThreadId))</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> debug_event.dwDebugEventCode == EXCEPTION_DEBUG_EVENT:</span><br><span class="line">            self.exception = debug_event.u.Exception.ExceptionRecord.ExceptionCode</span><br><span class="line">            self.exception_address = debug_event.u.Exception.ExceptionRecord.ExceptionAddress</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># call the internal handler for the exception event that just occured.</span></span><br><span class="line">            <span class="keyword">if</span> self.exception == EXCEPTION_ACCESS_VIOLATION:</span><br><span class="line">                print(<span class="string">"Access Violation Detected."</span>)</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_BREAKPOINT:</span><br><span class="line">                continue_status = self.exception_handler_breakpoint()</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_GUARD_PAGE:</span><br><span class="line">                print(<span class="string">"Guard Page Access Detected."</span>)</span><br><span class="line">            <span class="keyword">elif</span> self.exception == EXCEPTION_SINGLE_STEP:</span><br><span class="line">                self.exception_handler_single_step()</span><br><span class="line">            </span><br><span class="line">        kernel32.ContinueDebugEvent(debug_event.dwProcessId, debug_event.dwThreadId, continue_status)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># my_test.py</span></span><br><span class="line"><span class="keyword">import</span> my_debugger</span><br><span class="line"><span class="keyword">from</span> my_debugger_defines <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">debugger = my_debugger.debugger()</span><br><span class="line">pid = input(<span class="string">"Enter the PID of the process to attach to:"</span>)</span><br><span class="line">debugger.attach(int(pid))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里还是要使用bytes传参。</span></span><br><span class="line">printf_address = debugger.func_resolve(<span class="string">b"msvcrt.dll"</span>, <span class="string">b"printf"</span>)</span><br><span class="line">print(<span class="string">"[*] Address of printf: 0x%08x"</span> % printf_address)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># debugger.bp_set_hw(printf_address,1,HW_EXECUTE)</span></span><br><span class="line">debugger.bp_set_mem(printf_address, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">debugger.run()</span><br><span class="line"><span class="comment"># debugger.detach()</span></span><br><span class="line"><span class="comment"># input("")</span></span><br></pre></td></tr></table></figure>
+<p>运行效果：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Enter the PID of the <span class="keyword">process</span> to attach to:<span class="number">18932</span></span><br><span class="line">[*] Address of printf: <span class="number">0</span>x765a4f70</span><br><span class="line">Event Code: <span class="number">3</span> Thread ID: <span class="number">4304</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">4304</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">4304</span></span><br><span class="line">Event Code: <span class="number">6</span> Thread ID: <span class="number">4304</span></span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">11536</span></span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">11536</span></span><br><span class="line">[*] Exception address: <span class="number">0</span>x77943f80</span><br><span class="line">[*] Hit the first breakpoint.</span><br><span class="line">Event Code: <span class="number">4</span> Thread ID: <span class="number">11536</span></span><br><span class="line">Event Code: <span class="number">1</span> Thread ID: <span class="number">4304</span></span><br><span class="line">Guard Page Access Detected.</span><br><span class="line">Event Code: <span class="number">2</span> Thread ID: <span class="number">25076</span></span><br></pre></td></tr></table></figure>
+<p>可见内存断点触发成功。</p>
+<p>这里没有移除对内存的保护，但是程序也可以继续执行，是因为当CPU访问被保护的页面时，系统会抛出<code>GUARD_PAGE_EXCEPTION</code>异常，然后系统会自动将保护移除。</p>
+<p>所以我们以后要处理内存断点的时候，只需要捕获<code>GUARD_PAGE_EXCEPTION</code>异常，并进行相应的处理就行了。</p>
+<p>至此调试器的部分就基本理清了，可以基于本文中实现的调试功能，进一步组合处理，实现一些自动化分析过程。<code>p52</code></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>guiu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://guiu.xyz/p/780073ef.html" title="ctypes学习笔记三——断点">http://guiu.xyz/p/780073ef.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E8%B0%83%E8%AF%95%E5%99%A8/" rel="tag"># 调试器</a>
+              <a href="/tags/ctypes/" rel="tag"># ctypes</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/p/91668363.html" rel="prev" title="ctypes学习笔记二——用python写一个调试器">
+      <i class="fa fa-chevron-left"></i> ctypes学习笔记二——用python写一个调试器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/p/442dd6de.html" rel="next" title="Pydbg学习笔记一	——调试器基础使用">
+      Pydbg学习笔记一	——调试器基础使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">ctypes学习笔记三		——断点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E8%B0%83%E8%AF%95%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">捕获调试事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%AD%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">断点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E6%96%AD%E7%82%B9%EF%BC%9A"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">软件断点：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E6%96%AD%E7%82%B9"><span class="nav-number">1.2.1.</span> <span class="nav-text">硬件断点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%96%AD%E7%82%B9"><span class="nav-number">1.2.2.</span> <span class="nav-text">内存断点</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guiu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright">
+  <span><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备19032161号-1 </a>
+  </span>
+  <span class="post-meta-divider">|</span>
+
+
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guiu</span>
+
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v5.4.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+<div class="busuanzi-count">
+ <!--修复busuanzi有时候无法显示的问题，这里注释掉，改用本地js-->
+   <!--<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>-->
+  <script async src="/js/cursor/busuanzi_fix.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script async src="https://script-1256884783.file.myqcloud.com/cursor/fireworks.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/live2d-widget@^3.1.3/lib/L2Dwidget.min.js"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

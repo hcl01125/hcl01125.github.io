@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"guiu.xyz","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言 这几天在重新弄博客，基本上已经完工了，但是博客的链接还是不够友好。 因为hexo中的链接默认是年月日划分的，这样对SEO很不友好，所以就顺便做了博客的链接持久化，主要是使用的hexo-abbrlink这个插件，方法百度一堆，这里不再赘述。 在这之前因为看教程说会和hexo-asset-image插件冲突，所以一步到位搭了个图床，用来存放我的博客图片，也避免了日后图片过多超过github限制的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="批量将hexo文章中的本地图片转到chevereto图床">
+<meta property="og:url" content="http://guiu.xyz/p/1bcf5275.html">
+<meta property="og:site_name" content="Hcl的个人小站">
+<meta property="og:description" content="前言 这几天在重新弄博客，基本上已经完工了，但是博客的链接还是不够友好。 因为hexo中的链接默认是年月日划分的，这样对SEO很不友好，所以就顺便做了博客的链接持久化，主要是使用的hexo-abbrlink这个插件，方法百度一堆，这里不再赘述。 在这之前因为看教程说会和hexo-asset-image插件冲突，所以一步到位搭了个图床，用来存放我的博客图片，也避免了日后图片过多超过github限制的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://47.107.37.206/images/2020/02/25/2020-02-26_01-46.png">
+<meta property="og:image" content="http://47.107.37.206/images/2020/02/25/image.png">
+<meta property="article:published_time" content="2020-02-25T07:39:05.000Z">
+<meta property="article:modified_time" content="2020-02-25T07:39:05.000Z">
+<meta property="article:author" content="guiu">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="chevereto">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://47.107.37.206/images/2020/02/25/2020-02-26_01-46.png">
+
+<link rel="canonical" href="http://guiu.xyz/p/1bcf5275.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>批量将hexo文章中的本地图片转到chevereto图床 | Hcl的个人小站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hcl的个人小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/hcl01125" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://guiu.xyz/p/1bcf5275.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="guiu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hcl的个人小站">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          批量将hexo文章中的本地图片转到chevereto图床
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-25 15:39:05" itemprop="dateCreated datePublished" datetime="2020-02-25T15:39:05+08:00">2020-02-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%98%E8%85%BE%E7%BA%AA%E5%AE%9E/" itemprop="url" rel="index"><span itemprop="name">折腾纪实</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a class="header-anchor" href="#前言"></a>前言</h2>
+<p>这几天在重新弄博客，基本上已经完工了，但是博客的链接还是不够友好。</p>
+<p>因为<code>hexo</code>中的链接默认是年月日划分的，这样对<code>SEO</code>很不友好，所以就顺便做了博客的<code>链接持久化</code>，主要是使用的<code>hexo-abbrlink</code>这个插件，方法百度一堆，这里不再赘述。</p>
+<p>在这之前因为看教程说会和<code>hexo-asset-image</code>插件冲突，所以一步到位搭了个图床，用来存放我的博客图片，也避免了日后图片过多超过<code>github</code>限制的情况。</p>
+<a id="more"></a>
+<h2 id="准备工作"><a class="header-anchor" href="#准备工作"></a>准备工作</h2>
+<p>图床应用我用的<code>chevereto</code>，搭建教程这里也不提了，按照教程一路下一步即可。</p>
+<p>图床搭建好了，那么把之前存在本地的图片放上去就成了问题。一方面需要把文件传上去，另一方面还需要把原来文章中的图片引用链接改成图床的链接。我博客里文章不多，也就20多篇，但是图片可不算少，所以写了个脚本来完成这个工作。</p>
+<p><code>chevereto</code>提供了上传图片的<code>API</code>，所以首先需要去<code>chevereto</code>的后台获取你的<code>APIKEY</code>，然后才能调用接口。</p>
+<p>在<code>仪表盘</code>—&gt;<code>设置</code>—&gt;<code>API</code>菜单下就可以看到了。</p>
+<p><img src="http://47.107.37.206/images/2020/02/25/2020-02-26_01-46.png" alt="2020-02-26_01-46.png"></p>
+<p>然后就可以写代码了。</p>
+<hr>
+<h2 id="基本思路"><a class="header-anchor" href="#基本思路"></a>基本思路</h2>
+<p>基本思路是打开本地的<code>markdown</code>文件，然后正则获取其中引用的本地的图片路径，并将对应的文件通过<code>API</code>传到图床，然后把返回的图片链接替换回去即可。流程图如下:</p>
+<p><img src="http://47.107.37.206/images/2020/02/25/image.png" alt="流程图"></p>
+<hr>
+<h2 id="代码实现"><a class="header-anchor" href="#代码实现"></a>代码实现</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># author: guiu</span></span><br><span class="line"><span class="comment"># data: 2020.2.25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> mimetypes</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PixMv</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 初始化一些用到的变量</span></span><br><span class="line">        self.root = os.path.dirname(os.path.abspath(__file__))  <span class="comment"># 工作目录</span></span><br><span class="line">        self.md_list = []  <span class="comment"># 当前目录下的文章列表</span></span><br><span class="line">        self.error_url = &#123;&#125;     <span class="comment"># 上传失败的链接</span></span><br><span class="line">        self.current_filename = <span class="string">""</span></span><br><span class="line">        self.current_error_link = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list_md_file</span><span class="params">(self, path)</span>:</span></span><br><span class="line">        <span class="comment"># 搜寻当前目录下的md文件，方便后续修改(搜索深度只有一级)</span></span><br><span class="line">        <span class="keyword">for</span> file <span class="keyword">in</span> os.listdir(path):</span><br><span class="line">            <span class="keyword">if</span> file[<span class="number">-3</span>:] <span class="keyword">in</span> [<span class="string">".md"</span>, <span class="string">".MD"</span>]:</span><br><span class="line">                self.md_list.append(file)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">modify_md_file</span><span class="params">(self, md_list)</span>:</span></span><br><span class="line">        <span class="comment"># 对self.md_list中的文件进行修改,将本地引用的图片链接转成图床链接</span></span><br><span class="line">        <span class="keyword">for</span> file <span class="keyword">in</span> md_list:</span><br><span class="line">            <span class="comment"># 记录当前文件名</span></span><br><span class="line">            self.current_filename = file</span><br><span class="line">            <span class="keyword">with</span> open(os.path.join(self.root, file), <span class="string">"r+"</span>, encoding=<span class="string">'utf8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">                file_content = f.read()</span><br><span class="line">                <span class="comment"># 每个文件都建立一个错误列表，存放失败的链接</span></span><br><span class="line">                self.current_error_link = []</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    <span class="comment"># 正则匹配提取本地图片引用路径,传给modify_url函数修改后替换</span></span><br><span class="line">                    file_content = re.sub(<span class="string">r"\!\[.*?\]\((?!http:|data:).*?\)"</span>, self.modify_url,</span><br><span class="line">                                          file_content, count=<span class="number">0</span>, flags=<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">except</span>:</span><br><span class="line">                    print(<span class="string">"&#123;&#125; modify failed."</span>.format(self.current_filename))</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 移动文件指针到开头</span></span><br><span class="line">                f.seek(<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">                <span class="comment"># 覆盖写入修改后的内容</span></span><br><span class="line">                f.write(file_content)</span><br><span class="line">                print(<span class="string">"&#123;&#125; modify succeeded."</span>.format(self.current_filename))</span><br><span class="line">        <span class="comment"># 生成日志文件,记录失败的链接</span></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">"modify.log"</span>, <span class="string">'r+'</span>) <span class="keyword">as</span> log:</span><br><span class="line">            log.write(str(self.error_url))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">modify_url</span><span class="params">(self, url_match)</span>:</span></span><br><span class="line">        <span class="comment"># 将正则匹配到的路径上传至图床,并把图床链接替换回去</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 提取图片路径</span></span><br><span class="line">            img_path = re.findall(<span class="string">r"\.\/(.*?)\)"</span>, url_match.group())[<span class="number">0</span>]</span><br><span class="line">            resjson = self.up_to_chevereto(img_path)</span><br><span class="line">            <span class="comment"># 对获取到的图床链接进行处理</span></span><br><span class="line">            replaced_url = self.parse_response_url(resjson, img_path)</span><br><span class="line">            <span class="keyword">return</span> replaced_url</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="comment"># 错误的话就存起来，然后不修改</span></span><br><span class="line">            self.current_error_link = url_match.group()</span><br><span class="line">            self.error_url[self.current_filename] = self.current_error_link</span><br><span class="line">            <span class="keyword">return</span> url_match.group()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_response_url</span><span class="params">(self, json, img_path)</span>:</span></span><br><span class="line">        <span class="comment"># 从返回的json中解析字段</span></span><br><span class="line">        <span class="keyword">if</span> json[<span class="string">'status_code'</span>] != <span class="number">200</span>:</span><br><span class="line">            print(<span class="string">"&#123;&#125;\tweb端返回失败,可能是APIKey不对. status_code &#123;&#125; ."</span>.format(</span><br><span class="line">                img_path, json[<span class="string">'status_code'</span>])</span><br><span class="line">            )</span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">"上传成功了但是状态码不对,请手动核对"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            img_url = json[<span class="string">"image"</span>][<span class="string">"url"</span>]</span><br><span class="line">            filename = json[<span class="string">"image"</span>][<span class="string">"filename"</span>]</span><br><span class="line">            print(filename + <span class="string">"\t上传图床成功"</span>)</span><br><span class="line">            replace_url = <span class="string">"![&#123;&#125;](&#123;&#125;)"</span>.format(filename, img_url)</span><br><span class="line">            <span class="keyword">return</span> replace_url</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">up_to_chevereto</span><span class="params">(self, file)</span>:</span></span><br><span class="line">        <span class="comment"># 获得本地图片路径后，上传至图床并记录返回的json字段</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            res_json = self.upload(self.formatSource(file))</span><br><span class="line">            <span class="keyword">return</span> res_json</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            print(file+<span class="string">"\t上传失败"</span>)</span><br><span class="line">            <span class="comment"># 失败的话就抛一个异常</span></span><br><span class="line">            <span class="keyword">raise</span> Exception(<span class="string">"上传失败"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">(self, files)</span>:</span></span><br><span class="line">        <span class="comment"># 图床api</span></span><br><span class="line">        APIKey = <span class="string">"THERE PUT YOUR APIKEY"</span></span><br><span class="line">        format_str = <span class="string">"json"</span></span><br><span class="line">        url = <span class="string">"http://your_website/api/1/upload/?key="</span> + \</span><br><span class="line">            APIKey + <span class="string">"&amp;format="</span> + format_str  <span class="comment"># 图床地址</span></span><br><span class="line">        r = requests.post(url, files=files)</span><br><span class="line">        <span class="keyword">return</span> json.loads(r.text)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">formatSource</span><span class="params">(self, filename)</span>:</span></span><br><span class="line">        imageList = []</span><br><span class="line">        mime_type = mimetypes.guess_type(filename)[<span class="number">0</span>]</span><br><span class="line">        imageList.append(</span><br><span class="line">            (<span class="string">'source'</span>, (filename, open(filename, <span class="string">'rb'</span>), mime_type))</span><br><span class="line">        )</span><br><span class="line">        <span class="comment">#print (imageList)</span></span><br><span class="line">        <span class="keyword">return</span> imageList</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    p = PixMv()</span><br><span class="line">    p.list_md_file(p.root)</span><br><span class="line">    p.modify_md_file(p.md_list)</span><br></pre></td></tr></table></figure>
+<p>将脚本放在<code>/yourblog/source/_post/</code>文件夹下运行即可。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>guiu
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://guiu.xyz/p/1bcf5275.html" title="批量将hexo文章中的本地图片转到chevereto图床">http://guiu.xyz/p/1bcf5275.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/chevereto/" rel="tag"># chevereto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/p/3585c4c0.html" rel="prev" title="python实现批量往hexo文章添加YAML头">
+      <i class="fa fa-chevron-left"></i> python实现批量往hexo文章添加YAML头
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/p/c90ee787.html" rel="next" title="typora + chevereto之博客图片终极解决方法">
+      typora + chevereto之博客图片终极解决方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">基本思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="guiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">guiu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+<div class="copyright">
+  <span><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备19032161号-1 </a>
+  </span>
+  <span class="post-meta-divider">|</span>
+
+
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">guiu</span>
+
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v5.4.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.1
+  </div>
+
+        
+<div class="busuanzi-count">
+ <!--修复busuanzi有时候无法显示的问题，这里注释掉，改用本地js-->
+   <!--<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>-->
+  <script async src="/js/cursor/busuanzi_fix.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  <script async src="https://script-1256884783.file.myqcloud.com/cursor/fireworks.js"></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/live2d-widget@^3.1.3/lib/L2Dwidget.min.js"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
